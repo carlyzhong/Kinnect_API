@@ -1,5 +1,6 @@
 const {
-  convertTimestampToDate, formatData
+  convertTimestampToDate, formatData,
+  createRef
 } = require("../db/seeds/utils");
 
 describe("convertTimestampToDate", () => {
@@ -128,3 +129,57 @@ describe('formatData', () => {
   test('', () => { })
 })
 
+describe('createRef', () => {
+  test('return empty object when pass on empty array', () => {
+    expect(createRef([])).toEqual({})
+  })
+  test('return one reference when pass on one object', () => {
+    const input = [{
+      article_id: 10,
+      title: 'Seven inspirational thought leaders from Manchester UK',
+      topic: 'mitch',
+      author: 'rogersop',
+      body: "Who are we kidding, there is only one, and it's Mitch!",
+      created_at: '2020-05-14T04:15:00.000Z',
+      votes: 0,
+      article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+    }]
+    expect(createRef(input)).toEqual({"Seven inspirational thought leaders from Manchester UK": 10 })
+  })
+  test('return multiple references when pass on morethan one object', () => {
+    const input =  [
+    {
+      article_id: 11,
+      title: 'Am I a cat?',
+      topic: 'mitch',
+      author: 'icellusedkars',
+      body: 'Having run out of ideas for articles, I am staring at the wall blankly, like a cat. Does this make me a cat?',
+      created_at: '2020-01-15T22:21:00.000Z',
+      votes: 0,
+      article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+    },
+    {
+      article_id: 12,
+      title: 'Moustache',
+      topic: 'mitch',
+      author: 'butter_bridge',
+      body: 'Have you seen the size of that thing?',
+      created_at: '2020-10-11T11:24:00.000Z',
+      votes: 0,
+      article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+    },
+    {
+      article_id: 13,
+      title: 'Another article about Mitch',
+      topic: 'mitch',
+      author: 'butter_bridge',
+      body: 'There will never be enough articles about Mitch!',
+      created_at: '2020-10-11T11:24:00.000Z',
+      votes: 0,
+      article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+    }]
+    expect(createRef(input)).toEqual(
+      {'Am I a cat?':11 ,'Moustache':12, 'Another article about Mitch':13}
+    )
+  })
+})

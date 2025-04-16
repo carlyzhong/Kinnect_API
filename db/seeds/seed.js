@@ -1,7 +1,8 @@
 const db = require("../connection");
 var format = require('pg-format');
 const {
-  convertTimestampToDate, formatData
+  convertTimestampToDate, formatData,
+  createRef
 } = require("./utils");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
@@ -74,46 +75,26 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         const timeConvertedArticles = articleData.map(article => convertTimestampToDate(article))
         const insertUsersQuery = format(`
           INSERT INTO articles (created_at,title,topic,author,body,votes,article_img_url) 
-          VALUES %L`, formatData(timeConvertedArticles))
+          VALUES %L RETURNING *;`, formatData(timeConvertedArticles))
         return db.query(insertUsersQuery);
       })
-
-      //comments data only has article_title, need to use JOIN to link article_id, as require
-      .then(() => {
-        //create a temp_comments table to hold the origin comments raw data
-        return db.query(`CREATE TABLE temp_comments(
-          article_title VARCHAR(500),
-          body TEXT,
-          votes INT,
-          author VARCHAR(50),
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`);
-      })
-      .then(() => {
-        //insert the raw data into temp
-        const timeConvertedComment = commentData.map(comment => convertTimestampToDate(comment))
-        console.log(timeConvertedComment)
+      .then((result) => {
+        articleIDReference = createRef(result.rows)
+        const formattedComments = commentData.map(comment => {
+          const timeConvertedComment = convertTimestampToDate(comment)
+          return [
+            articleIDReference[comment.article_title],
+            timeConvertedComment.body,
+            timeConvertedComment.votes,
+            timeConvertedComment.author,
+            timeConvertedComment.created_at,
+          ]
+        })
         const insertUsersQuery = format(`
-          INSERT INTO temp_comments (created_at,article_title,body,votes,author) 
-          VALUES %L`, formatData(timeConvertedComment))
+          INSERT INTO comments (article_id,body,votes,author,created_at) 
+          VALUES %L`, formattedComments)
         return db.query(insertUsersQuery)
       })
-      .then(() => {
-        return db.query(`
-        INSERT INTO comments (article_id, body, votes, author, created_at)
-        SELECT 
-          articles.article_id,
-          temp_comments.body,
-          temp_comments.votes,
-          temp_comments.author,
-          temp_comments.created_at
-        FROM temp_comments
-        JOIN articles ON articles.title = temp_comments.article_title;
-        `)
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS temp_comments;");
-      })
-
   );
 };
 module.exports = seed;
