@@ -95,6 +95,9 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
           VALUES %L`, formattedComments)
         return db.query(insertUsersQuery)
       })
+      .then(() => {
+        console.log('Seeding is completed.')
+      })
   );
 };
 module.exports = seed;
