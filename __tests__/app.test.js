@@ -18,3 +18,32 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe("attempting to access a non-existent endpoint", () => {
+  test("404: when requesting a invalid endpoint", () => {
+    return request(app)
+      .get("/notARoute")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Nothing to see here!");
+      });
+  });
+});
+
+describe("GET /api/topics", () => {
+  test("200: responds with the all topics", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body: { topics } }) => {
+        expect(topics.length).toBe(3);
+        topics.forEach((topic) => {
+          expect(topic).toMatchObject({
+            slug: expect.any(String),
+            description: expect.any(String),
+          });
+        });
+      });
+  });
+  // test("");
+});
