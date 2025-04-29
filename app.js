@@ -5,6 +5,7 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticleById,
   getArticles,
+  getCommentsByArticleId,
 } = require("./controllers/articles.controller");
 const {
   handleCustomErrors,
@@ -15,6 +16,7 @@ const {
 
 app.get("/api", getApi);
 app.get("/api/topics", getTopics);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
 

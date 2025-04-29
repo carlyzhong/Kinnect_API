@@ -85,7 +85,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe.only("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   test("200 OK: responds with the all articles", () => {
     return request(app)
       .get("/api/articles")
@@ -107,6 +107,52 @@ describe.only("GET /api/articles", () => {
             comment_count: expect.any(Number),
           });
         });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200 OK: responds with all comments of the selected article", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+        expect(comments.length).toBe(11);
+        comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            article_id: expect.any(Number),
+          });
+        });
+      });
+  });
+  test("200 OK: responds with empty array of comments for an article which has no comments", () => {
+    return request(app)
+      .get("/api/articles/8/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(0);
+      });
+  });
+  test("404 Not Found: when passed a valid number but does not exist in the db", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("No article found for article_id: 999");
+      });
+  });
+  test("400 Bad Request: when passed an invalid number as id", () => {
+    return request(app)
+      .get("/api/articles/notANumber/comments")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Input!");
       });
   });
 });
