@@ -11,7 +11,6 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 
 exports.handleSQLErrors = (err, req, res, next) => {
-  // console.log(err, "inside sql error handling!!!!!!!");
   if (err.code === "22P02") {
     res.status(400).send({ msg: "Invalid Input!" });
   } else {
