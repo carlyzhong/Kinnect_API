@@ -25,7 +25,7 @@ describe("attempting to access a non-existent endpoint", () => {
       .get("/notARoute")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Nothing to see here!");
+        expect(msg).toBe("Invalid Endpoint!");
       });
   });
 });
@@ -45,5 +45,41 @@ describe("GET /api/topics", () => {
         });
       });
   });
-  // test("");
+});
+
+describe("GET /api/articles/:article_id", () => {
+  test("200 OK: responds with the selected article", () => {
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("404 Not Found: when passed a valid number but does not exist in the db", () => {
+    return request(app)
+      .get("/api/articles/9999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("No article found for article_id: 9999");
+      });
+  });
+  test("400 Bad Request: when passed an invalid number as id", () => {
+    return request(app)
+      .get("/api/articles/notANumber")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid Input!");
+      });
+  });
 });
