@@ -5,8 +5,11 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticleById,
   getArticles,
-  getCommentsByArticleId,
 } = require("./controllers/articles.controller");
+const {
+  getCommentsByArticleId,
+  postComment,
+} = require("./controllers/comments.controller");
 const {
   handleCustomErrors,
   handleSQLErrors,
@@ -14,11 +17,15 @@ const {
   handleServerErrors,
 } = require("./errors/index");
 
+app.use(express.json());
+
 app.get("/api", getApi);
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
+
+app.post("/api/articles/:article_id/comments", postComment);
 
 app.all("/*splat", handleEndpointError);
 

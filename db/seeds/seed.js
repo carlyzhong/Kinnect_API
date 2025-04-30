@@ -1,9 +1,6 @@
 const db = require("../connection");
-var format = require('pg-format');
-const {
-  convertTimestampToDate, formatData,
-  createRef
-} = require("./utils");
+var format = require("pg-format");
+const { convertTimestampToDate, formatData, createRef } = require("./utils");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return (
@@ -60,39 +57,53 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
 
       //insert table content
       .then(() => {
-        const insertTopicsQuery = format(`INSERT INTO topics (description, slug, img_url) VALUES %L;`, formatData(topicData))
+        const insertTopicsQuery = format(
+          `INSERT INTO topics (description, slug, img_url) VALUES %L;`,
+          formatData(topicData)
+        );
         return db.query(insertTopicsQuery);
       })
       .then(() => {
-        const insertUsersQuery = format(`INSERT INTO users (username,name,avatar_url) VALUES %L;`, formatData(userData))
+        const insertUsersQuery = format(
+          `INSERT INTO users (username,name,avatar_url) VALUES %L;`,
+          formatData(userData)
+        );
         return db.query(insertUsersQuery);
       })
       .then(() => {
-        const timeConvertedArticles = articleData.map(article => convertTimestampToDate(article))
-        const insertUsersQuery = format(`
+        const timeConvertedArticles = articleData.map((article) =>
+          convertTimestampToDate(article)
+        );
+        const insertArticlesQuery = format(
+          `
           INSERT INTO articles (created_at,title,topic,author,body,votes,article_img_url) 
-          VALUES %L RETURNING *;`, formatData(timeConvertedArticles))
-        return db.query(insertUsersQuery);
+          VALUES %L RETURNING *;`,
+          formatData(timeConvertedArticles)
+        );
+        return db.query(insertArticlesQuery);
       })
       .then((result) => {
-        articleIDReference = createRef(result.rows)
-        const formattedComments = commentData.map(comment => {
-          const timeConvertedComment = convertTimestampToDate(comment)
+        articleIDReference = createRef(result.rows);
+        const formattedComments = commentData.map((comment) => {
+          const timeConvertedComment = convertTimestampToDate(comment);
           return [
             articleIDReference[comment.article_title],
             timeConvertedComment.body,
             timeConvertedComment.votes,
             timeConvertedComment.author,
             timeConvertedComment.created_at,
-          ]
-        })
-        const insertUsersQuery = format(`
+          ];
+        });
+        const insertCommentsQuery = format(
+          `
           INSERT INTO comments (article_id,body,votes,author,created_at) 
-          VALUES %L`, formattedComments)
-        return db.query(insertUsersQuery)
+          VALUES %L`,
+          formattedComments
+        );
+        return db.query(insertCommentsQuery);
       })
       .then(() => {
-        console.log('Seeding is completed.')
+        console.log("Seeding is completed.");
       })
   );
 };
