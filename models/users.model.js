@@ -14,3 +14,10 @@ exports.selectUserByUsername = (username) => {
       return user;
     });
 };
+
+exports.selectUsers = () => {
+  return db.query(`SELECT * FROM users ORDER BY username`).then(({ rows }) => {
+    const users = rows;
+    return users;
+  });
+};
