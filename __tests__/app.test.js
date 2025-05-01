@@ -86,7 +86,7 @@ describe("GET /api/articles/:article_id", () => {
 });
 
 describe("GET /api/articles", () => {
-  test("200 OK: responds with the all articles", () => {
+  test("200 OK: responds with all articles with comment counts", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -107,6 +107,55 @@ describe("GET /api/articles", () => {
             comment_count: expect.any(Number),
           });
         });
+      });
+  });
+  test("200 OK: responds with all articles with descending created_at by default", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBeGreaterThan(0);
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("200 OK: when passed a valid field name as sort_by, default as descending ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title")
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBeGreaterThan(0);
+        expect(articles).toBeSortedBy("title", { descending: true });
+      });
+  });
+  test("200 OK: when passed a valid field name as sort_by and a valid order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=asc")
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBeGreaterThan(0);
+        expect(articles).toBeSortedBy("author", { ascending: true });
+      });
+  });
+  test("200 OK: when only passed a valid order without field name, should sort by created_at by default", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBeGreaterThan(0);
+        expect(articles).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+  test("400 Bad Request: when passed an invalid field name as sort_by", () => {
+    return request(app)
+      .get("/api/articles?sort_by=harmfulCode")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid sort_by parameter!");
+      });
+  });
+  test("400 Bad Request: when passed an invalid field name as order", () => {
+    return request(app)
+      .get("/api/articles?order=harmfulCode")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid order parameter!");
       });
   });
 });
