@@ -16,8 +16,9 @@ exports.selectUserByUsername = (username) => {
 };
 
 exports.selectUsers = () => {
-  return db.query(`SELECT * FROM users ORDER BY username`).then(({ rows }) => {
-    const users = rows;
-    return users;
-  });
+  return db
+    .query(`SELECT * FROM users ORDER BY username`)
+    .then(({ rows: users }) => {
+      return users;
+    });
 };

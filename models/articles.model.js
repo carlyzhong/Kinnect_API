@@ -62,8 +62,8 @@ exports.selectArticles = (sort_by, order) => {
     });
   }
 
-  return db.query(queryStr).then(({ rows }) => {
-    return rows;
+  return db.query(queryStr).then(({ rows: articles }) => {
+    return articles;
   });
 };
 
