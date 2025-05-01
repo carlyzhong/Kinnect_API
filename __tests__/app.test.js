@@ -75,12 +75,12 @@ describe("GET /api/articles/:article_id", () => {
         expect(msg).toBe("No article found for article_id: 9999");
       });
   });
-  test("400 Bad Request: when passed an invalid number as id", () => {
+  test("400 Bad Request: when passed an invalid data type as id", () => {
     return request(app)
       .get("/api/articles/notANumber")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid article id!");
+        expect(msg).toBe("Invalid id!");
       });
   });
 });
@@ -147,12 +147,12 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(msg).toBe("No article found for article_id: 999");
       });
   });
-  test("400 Bad Request: when passed an invalid number as id", () => {
+  test("400 Bad Request: when passed an invalid data type as id", () => {
     return request(app)
       .get("/api/articles/notANumber/comments")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid article id!");
+        expect(msg).toBe("Invalid id!");
       });
   });
 });
@@ -252,18 +252,18 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid article id!");
+        expect(msg).toBe("Invalid id!");
       });
   });
 });
 
 describe("PATCH /api/articles/:article_id", () => {
-  test("202 Accepted: responds with the selected article with incremented votes", () => {
+  test("200 OK: responds with the selected article with incremented votes", () => {
     const testNewVote = { inc_votes: 50 };
     return request(app)
       .patch("/api/articles/3")
       .send(testNewVote)
-      .expect(202)
+      .expect(200)
       .then(({ body: { article } }) => {
         expect(article).toEqual({
           article_id: 3,
@@ -278,12 +278,12 @@ describe("PATCH /api/articles/:article_id", () => {
         });
       });
   });
-  test("202 Accepted: responds with the selected article with decremented votes", () => {
+  test("200 OK: responds with the selected article with decremented votes", () => {
     const testNewVote = { inc_votes: -200 };
     return request(app)
       .patch("/api/articles/3")
       .send(testNewVote)
-      .expect(202)
+      .expect(200)
       .then(({ body: { article } }) => {
         expect(article).toEqual({
           article_id: 3,
@@ -315,7 +315,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(testNewVote)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid article id!");
+        expect(msg).toBe("Invalid id!");
       });
   });
   test("400 Bad Request: when passed an invalid data type in newVote ", () => {
@@ -336,6 +336,35 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid input!");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204 No Content: deletes the selected comment", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({ body }) => {
+        db.query(`SELECT comment_id FROM comments`).then(({ rows }) => {
+          expect(rows).not.toContain(1);
+        });
+      });
+  });
+  test("404 Not Found: when passed a valid number as comment_id but does not exist in the db", () => {
+    return request(app)
+      .delete("/api/comments/9999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("No article found for comment_id: 9999");
+      });
+  });
+  test("400 Bad Request: when passed an invalid data type as article_id", () => {
+    return request(app)
+      .delete("/api/comments/notANumber")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid id!");
       });
   });
 });
