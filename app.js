@@ -5,6 +5,7 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticleById,
   getArticles,
+  patchNewVotes,
 } = require("./controllers/articles.controller");
 const {
   getCommentsByArticleId,
@@ -26,6 +27,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/articles/:article_id", patchNewVotes);
 
 app.all("/*splat", handleEndpointError);
 

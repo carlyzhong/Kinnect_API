@@ -229,7 +229,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(msg).toBe("Invalid input!");
       });
   });
-
   test("404 Not Found: when passed a valid number as article_id but does not exist in the db", () => {
     const newComment = {
       username: "butter_bridge",
@@ -254,6 +253,89 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid article id!");
+      });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("202 Accepted: responds with the selected article with incremented votes", () => {
+    const testNewVote = { inc_votes: 50 };
+    return request(app)
+      .patch("/api/articles/3")
+      .send(testNewVote)
+      .expect(202)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 50,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("202 Accepted: responds with the selected article with decremented votes", () => {
+    const testNewVote = { inc_votes: -200 };
+    return request(app)
+      .patch("/api/articles/3")
+      .send(testNewVote)
+      .expect(202)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: -200,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("404 Not Found: when passed a valid number as article_id but does not exist in the db", () => {
+    const testNewVote = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/999")
+      .send(testNewVote)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("No article found for article_id: 999");
+      });
+  });
+  test("400 Bad Request: when passed an invalid data type as article_id", () => {
+    const testNewVote = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/notANumber")
+      .send(testNewVote)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid article id!");
+      });
+  });
+  test("400 Bad Request: when passed an invalid data type in newVote ", () => {
+    const testNewVote = { inc_votes: "not a number" };
+    return request(app)
+      .patch("/api/articles/3")
+      .send(testNewVote)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input!");
+      });
+  });
+  test("400 Bad Request: when missing content in the newVote", () => {
+    const testNewVote = {};
+    return request(app)
+      .patch("/api/articles/3")
+      .send(testNewVote)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input!");
       });
   });
 });
