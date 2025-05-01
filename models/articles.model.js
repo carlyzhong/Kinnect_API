@@ -15,18 +15,56 @@ exports.selectArticleById = (id) => {
     });
 };
 
-exports.selectArticles = () => {
-  return db
-    .query(
-      `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, count(comments.comment_id)::INT AS comment_count
-        FROM articles
-        LEFT JOIN comments ON comments.article_id = articles.article_id
-        GROUP BY articles.article_id
-        ORDER BY articles.created_at DESC;`
-    )
-    .then(({ rows }) => {
-      return rows;
+exports.selectArticles = (sort_by, order) => {
+  const validSortBy = [
+    "title",
+    "article_id",
+    "topic",
+    "author",
+    "created_at",
+    "votes",
+  ];
+  const validOrder = ["DESC", "ASC"];
+
+  let queryStr = ` 
+    SELECT 
+      articles.author, 
+      articles.title, 
+      articles.article_id, 
+      articles.topic, 
+      articles.created_at, 
+      articles.votes, 
+      articles.article_img_url, 
+      count(comments.comment_id)::INT AS comment_count
+    FROM articles
+    LEFT JOIN comments ON comments.article_id = articles.article_id
+    GROUP BY articles.article_id `;
+
+  if (sort_by && validSortBy.includes(sort_by.toLowerCase())) {
+    queryStr += `ORDER BY ${sort_by} `;
+  } else if (!sort_by) {
+    queryStr += `ORDER BY created_at `;
+  } else {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid sort_by parameter!",
     });
+  }
+
+  if (order && validOrder.includes(order.toUpperCase())) {
+    queryStr += `${order};`;
+  } else if (!order) {
+    queryStr += `DESC;`;
+  } else {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid order parameter!",
+    });
+  }
+
+  return db.query(queryStr).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.updateVotes = (article_id, inc_votes) => {
