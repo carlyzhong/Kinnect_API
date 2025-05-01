@@ -29,7 +29,7 @@ exports.patchNewVotes = (req, res, next) => {
     const pendingUpdateVotes = updateVotes(article_id, inc_votes);
     Promise.all([pendingUpdateVotes, pendingArticleIdValid])
       .then(([article]) => {
-        res.status(202).send({ article });
+        res.status(200).send({ article });
       })
       .catch((err) => {
         next(err);

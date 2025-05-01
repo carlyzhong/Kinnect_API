@@ -1,7 +1,9 @@
 const { selectArticleById } = require("../models/articles.model");
 const {
   selectCommentsByArticleId,
+  selectCommentById,
   insertComment,
+  deleteCommentModel,
 } = require("../models/comments.model");
 const { selectUserByUsername } = require("../models/users.model");
 
@@ -40,4 +42,17 @@ exports.postComment = (req, res, next) => {
   } else {
     next({ status: 400, msg: "Invalid input!" });
   }
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  const pendingCommentIdValid = selectCommentById(comment_id);
+  const pendingDeleteComment = deleteCommentModel(comment_id);
+  Promise.all([pendingDeleteComment, pendingCommentIdValid])
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

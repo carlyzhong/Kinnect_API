@@ -10,6 +10,7 @@ const {
 const {
   getCommentsByArticleId,
   postComment,
+  deleteComment,
 } = require("./controllers/comments.controller");
 const {
   handleCustomErrors,
@@ -29,6 +30,8 @@ app.get("/api/articles", getArticles);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", patchNewVotes);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("/*splat", handleEndpointError);
 
