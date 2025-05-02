@@ -37,7 +37,6 @@ describe("GET /api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body: { topics } }) => {
-        console.log(topics);
         expect(topics.length).toBe(3);
         topics.forEach((topic) => {
           expect(topic).toMatchObject({
