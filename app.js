@@ -23,6 +23,10 @@ const { getAllUsers } = require("./controllers/users.controller");
 
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.redirect("/api");
+});
+
 app.get("/api", getApi);
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
@@ -36,7 +40,7 @@ app.patch("/api/articles/:article_id", patchNewVotes);
 
 app.delete("/api/comments/:comment_id", deleteComment);
 
-app.all("/*splat", handleEndpointError);
+app.all("*splat", handleEndpointError);
 
 app.use(handleCustomErrors);
 app.use(handleSQLErrors);
