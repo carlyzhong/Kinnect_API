@@ -1,16 +1,26 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
-  },
-  "GET /api/topics": {
-    "description": "serves an array of all topics",
+    "description": "Serves up a JSON representation of all available endpoints of the API",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
+      "endpoints": "JSON object containing all API endpoints documentation"
+    },
+    "GET /api/topics": {
+      "description": "Serves an array of all topics",
+      "queries": [],
+      "exampleResponse": {
+        "topics": [
+          {
+            "slug": "football",
+            "description": "Footie!",
+            "img_url": "https://example.com/football.jpg"
+          }
+        ]
+      }
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles, sorted by created_at in descending order by default",
+    "description": "Serves an array of all articles",
     "queries": ["sort_by", "order", "topic"],
     "queryInfo": {
       "sort_by": {
@@ -20,8 +30,7 @@
           "topic",
           "author",
           "created_at",
-          "votes",
-          "comment_count"
+          "votes"
         ],
         "default": "created_at"
       },
@@ -30,7 +39,6 @@
         "default": "DESC"
       },
       "topic": {
-        "description": "Filter articles by topic",
         "validValues": "Any topic slug that exists in the database"
       }
     },
@@ -47,22 +55,37 @@
           "comment_count": 2
         },
         {
-          "author": "icellusedkars",
-          "title": "A",
-          "article_id": 6,
+          "author": "butter_bridge",
+          "title": "Living in the shadow of a great man",
+          "article_id": 1,
           "topic": "mitch",
-          "created_at": "2020-10-18T01:00:00.000Z",
+          "created_at": "2020-07-09T20:11:00.000Z",
+          "votes": 100,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 11
+        },
+        {
+          "author": "rogersop",
+          "title": "UNCOVERED: catspiracy to bring down democracy",
+          "article_id": 5,
+          "topic": "cats",
+          "created_at": "2020-08-03T13:14:00.000Z",
           "votes": 0,
           "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          "comment_count": 1
+          "comment_count": 2
         }
       ]
     }
   },
-  "GET api/articles/:article_id": {
-    "description": "serves the selected article by article_id with comment_count",
-    "request": "number",
-    "queries": [],
+  "GET /api/articles/:article_id": {
+    "description": "Serves a specific article by its ID, including comment count",
+    "parameters": [
+      {
+        "name": "article_id",
+        "type": "number",
+        "description": "The ID of the article to retrieve"
+      }
+    ],
     "exampleResponse": {
       "article": {
         "article_id": 3,
@@ -73,13 +96,19 @@
         "created_at": "2020-11-03T09:12:00.000Z",
         "votes": 0,
         "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        "comment_count": 3
+        "comment_count": 2
       }
     }
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "serves an array of comments of the selected article, sort by the most recent comments by default",
-    "params": "number",
+    "description": "Serves an array of comments for a specific article, sorted by most recent first",
+    "parameters": [
+      {
+        "name": "article_id",
+        "type": "number",
+        "description": "The ID of the article to get comments for"
+      }
+    ],
     "queries": [],
     "exampleResponse": {
       "comments": [
@@ -103,13 +132,14 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": " request a new commant and respond with the comment posted",
-    "params": "number",
-    "queries": [],
-    "exampleBody": {
-      "username": "butter_bridge",
-      "body": "This is a testing comment..."
-    },
+    "description": "Adds a new comment to a specific article",
+    "parameters": [
+      {
+        "name": "article_id",
+        "type": "number",
+        "description": "The ID of the article to comment on"
+      }
+    ],
     "exampleResponse": {
       "comment": {
         "comment_id": 19,
@@ -122,10 +152,17 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description": " request a new votes and respond with the article",
-    "params": "number",
-    "queries": [],
-    "exampleBody": { "inc_votes": 10 },
+    "description": "Updates the votes for a specific article",
+    "parameters": [
+      {
+        "name": "article_id",
+        "type": "number",
+        "description": "The ID of the article to update"
+      }
+    ],
+    "exampleRequestBody": {
+      "inc_votes": 10
+    },
     "exampleResponse": {
       "article": {
         "article_id": 3,
@@ -140,14 +177,22 @@
     }
   },
   "DELETE /api/comments/:comment_id": {
-    "description": "deletes the given comment by comment_id and returns no content",
-    "params": "number",
-    "queries": [],
-    "responseCode": 204,
-    "exampleResponse": "No content"
+    "description": "Deletes a specific comment by its ID",
+    "parameters": [
+      {
+        "name": "comment_id",
+        "type": "number",
+        "description": "The ID of the comment to delete"
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "Comment successfully deleted. No content returned."
+      }
+    }
   },
   "GET /api/users": {
-    "description": "serves an array of all users",
+    "description": "Serves an array of all users, sorted by username",
     "queries": [],
     "exampleResponse": {
       "users": [
