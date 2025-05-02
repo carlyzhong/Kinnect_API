@@ -32,7 +32,7 @@ describe("attempting to access a non-existent endpoint", () => {
 });
 
 describe("GET /api/topics", () => {
-  test.only("200: responds with the all topics", () => {
+  test("200: responds with the all topics", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
