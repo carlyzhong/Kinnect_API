@@ -89,7 +89,7 @@ describe("GET /api/articles/:article_id", () => {
 
 describe("GET /api/articles", () => {
   describe("200 OK", () => {
-    test("responds with all articles with comment counts", () => {
+    test("responds with all articles", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -107,8 +107,18 @@ describe("GET /api/articles", () => {
               created_at: expect.any(String),
               votes: expect.any(Number),
               article_img_url: expect.any(String),
-              comment_count: expect.any(Number),
             });
+          });
+        });
+    });
+    test("responds with articles with comment counts", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(13);
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("comment_count");
           });
         });
     });
