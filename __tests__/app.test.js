@@ -32,16 +32,18 @@ describe("attempting to access a non-existent endpoint", () => {
 });
 
 describe("GET /api/topics", () => {
-  test("200: responds with the all topics", () => {
+  test.only("200: responds with the all topics", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
       .then(({ body: { topics } }) => {
+        console.log(topics);
         expect(topics.length).toBe(3);
         topics.forEach((topic) => {
           expect(topic).toMatchObject({
             slug: expect.any(String),
             description: expect.any(String),
+            img_url: expect.any(String),
           });
         });
       });
