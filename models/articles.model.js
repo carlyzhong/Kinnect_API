@@ -15,7 +15,7 @@ exports.selectArticleById = (id) => {
     });
 };
 
-exports.selectArticles = (sort_by, order) => {
+exports.selectArticles = (sort_by, order, topic) => {
   const validSortBy = [
     "title",
     "article_id",
@@ -26,6 +26,7 @@ exports.selectArticles = (sort_by, order) => {
   ];
   const validOrder = ["DESC", "ASC"];
 
+  let queryArgs = [];
   let queryStr = ` 
     SELECT 
       articles.author, 
@@ -39,6 +40,11 @@ exports.selectArticles = (sort_by, order) => {
     FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id
     GROUP BY articles.article_id `;
+
+  if (topic) {
+    queryStr += `HAVING topic = $1 `;
+    queryArgs.push(topic.toLowerCase());
+  }
 
   if (sort_by && validSortBy.includes(sort_by.toLowerCase())) {
     queryStr += `ORDER BY ${sort_by} `;
@@ -62,7 +68,7 @@ exports.selectArticles = (sort_by, order) => {
     });
   }
 
-  return db.query(queryStr).then(({ rows: articles }) => {
+  return db.query(queryStr, queryArgs).then(({ rows: articles }) => {
     return articles;
   });
 };

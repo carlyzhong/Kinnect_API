@@ -11,7 +11,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles, sorted by created_at in descending order by default",
-    "queries": ["sort_by", "order"],
+    "queries": ["sort_by", "order", "topic"],
     "queryInfo": {
       "sort_by": {
         "validValues": [
@@ -28,6 +28,10 @@
       "order": {
         "validValues": ["ASC", "DESC"],
         "default": "DESC"
+      },
+      "topic": {
+        "description": "Filter articles by topic",
+        "validValues": "Any topic slug that exists in the database"
       }
     },
     "exampleResponse": {
