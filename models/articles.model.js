@@ -2,7 +2,18 @@ const db = require("../db/connection");
 
 exports.selectArticleById = (id) => {
   return db
-    .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
+    .query(
+      `
+      SELECT 
+        articles.*, 
+        count(comments.comment_id)::INT AS comment_count 
+      FROM articles 
+      LEFT JOIN comments 
+      USING (article_id) 
+      GROUP BY articles.article_id 
+      HAVING articles.article_id= $1;`,
+      [id]
+    )
     .then(({ rows }) => {
       const article = rows[0];
       if (!article) {
