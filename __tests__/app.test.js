@@ -142,6 +142,14 @@ describe("GET /api/articles", () => {
         expect(articles).toBeSortedBy("created_at", { ascending: true });
       });
   });
+  test("200 OK: when passed order before sort_by ", () => {
+    return request(app)
+      .get("/api/articles?order=asc&sort_by=author")
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBeGreaterThan(0);
+        expect(articles).toBeSortedBy("author", { ascending: true });
+      });
+  });
   test("400 Bad Request: when passed an invalid field name as sort_by", () => {
     return request(app)
       .get("/api/articles?sort_by=harmfulCode")
@@ -156,6 +164,22 @@ describe("GET /api/articles", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Invalid order parameter!");
+      });
+  });
+  test("400 Bad Request: if sort_by key is mis-spelled", () => {
+    return request(app)
+      .get("/api/articles?szzort_by=article_id")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid parameter: szzort_by");
+      });
+  });
+  test("400 Bad Request: if order key is mis-spelled", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&orrder=asc")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid parameter: orrder");
       });
   });
 });

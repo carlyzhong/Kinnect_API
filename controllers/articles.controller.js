@@ -16,6 +16,20 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
+  const validQueries = ["sort_by", "order"];
+  const receivedQueries = Object.keys(req.query);
+
+  const invalidQueries = receivedQueries.filter(
+    (query) => !validQueries.includes(query)
+  );
+
+  if (invalidQueries.length > 0) {
+    return next({
+      status: 400,
+      msg: `Invalid parameter: ${invalidQueries}`,
+    });
+  }
+
   const { sort_by, order } = req.query;
   selectArticles(sort_by, order)
     .then((articles) => {
