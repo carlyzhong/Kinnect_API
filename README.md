@@ -14,12 +14,70 @@ This is a RESTful API that powers a website similar to Reddit where users can re
 
 ## Table of Contents
 
-- [Tech Stack & Skills](#tech-stack--skills)
 - [Setup Instructions](#setup-instructions)
+- [Tech Stack & Skills](#tech-stack--skills)
 - [API Documentation](#api-documentation)
-- [Testing](#testing)
-- [Development Approach](#development-approach)
-- [Future Improvements](#future-improvements)
+- [Database Schema](#database-schema)
+
+## Setup Instructions
+
+### Prerequisites
+
+- Node.js ( v23.7.0 or higher )
+- PostgreSQL ( v14.0 or higher )
+
+### Installation
+
+#### 1. Clone the [repository](https://github.com/carlyzhong/DevDialogue-API):
+
+#### 2. Install dependencies:
+
+```zsh
+npm install
+```
+
+#### 3. Set up environment variables:
+
+Create two `.env` files in the root directory:
+
+For development:
+
+```
+// .env.development
+PGDATABASE=dev_dialogue
+```
+
+For testing:
+
+```
+// .env.test
+PGDATABASE=dev_dialogue_test
+```
+
+#### 4. Set up and seed the database:
+
+```zsh
+npm run setup-dbs
+npm run seed-dev
+```
+
+### Running Tests
+
+Run the test suite with:
+
+```zsh
+npm test
+```
+
+### Local Development
+
+To run the server locally:
+
+```zsh
+npm start
+```
+
+By default, the server will listen on port 9090 (`http://localhost:9090`).
 
 ## Tech Stack & Skills
 
@@ -45,66 +103,6 @@ This project demonstrates proficiency in API development, database design, Test-
 2. **MVC Architecture**: Clear separation of models, views, and controllers
 3. **RESTful Design**: Following REST principles for API endpoints
 4. **Incremental Development**: Building features incrementally with git version control
-
-## Setup Instructions
-
-### Prerequisites
-
-- Node.js ( v23.7.0 or higher )
-- PostgreSQL ( v14.0 or higher )
-
-### Cloning and Installation
-
-1. Clone the [repository](https://github.com/carlyzhong/DevDialogue-API):
-
-2. Install dependencies:
-
-```zsh
-npm install
-```
-
-3. Set up environment variables:
-
-Create two `.env` files in the root directory:
-
-For development:
-
-```
-// .env.development
-PGDATABASE=dev_dialogue
-```
-
-For testing:
-
-```
-// .env.test
-PGDATABASE=dev_dialogue_test
-```
-
-4. Set up and seed the database:
-
-```zsh
-npm run setup-dbs
-npm run seed-dev
-```
-
-### Running Tests
-
-Run the test suite with:
-
-```zsh
-npm test
-```
-
-### Local Development
-
-To run the server locally:
-
-```
-npm start
-```
-
-By default, the server will listen on port 9090 (`http://localhost:9090`).
 
 ## API Documentation
 
