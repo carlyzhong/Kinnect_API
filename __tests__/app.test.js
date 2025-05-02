@@ -86,101 +86,179 @@ describe("GET /api/articles/:article_id", () => {
 });
 
 describe("GET /api/articles", () => {
-  test("200 OK: responds with all articles with comment counts", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then(({ body: { articles } }) => {
-        expect(articles.length).toBe(13);
-        expect(articles).toBeSortedBy("created_at", { descending: true });
-        articles.forEach((article) => {
-          expect(Date.parse(article.created_at)).not.toBeNaN();
-          expect(article).not.toHaveProperty("body");
-          expect(article).toMatchObject({
-            author: expect.any(String),
-            title: expect.any(String),
-            article_id: expect.any(Number),
-            topic: expect.any(String),
-            created_at: expect.any(String),
-            votes: expect.any(Number),
-            article_img_url: expect.any(String),
-            comment_count: expect.any(Number),
+  describe("200 OK", () => {
+    test("responds with all articles with comment counts", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(13);
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+          articles.forEach((article) => {
+            expect(Date.parse(article.created_at)).not.toBeNaN();
+            expect(article).not.toHaveProperty("body");
+            expect(article).toMatchObject({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(Number),
+            });
           });
         });
-      });
+    });
+    test("responds with all articles with descending created_at by default", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBeGreaterThan(0);
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    test("when passed a valid field name as sort_by, default as descending ", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title")
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBeGreaterThan(0);
+          expect(articles).toBeSortedBy("title", { descending: true });
+        });
+    });
+    test("when passed a valid field name as sort_by and a valid order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author&order=asc")
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBeGreaterThan(0);
+          expect(articles).toBeSortedBy("author", { ascending: true });
+        });
+    });
+    test("when only passed a valid order without field name, should sort by created_at by default", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBeGreaterThan(0);
+          expect(articles).toBeSortedBy("created_at", { ascending: true });
+        });
+    });
+    test("when passed order before sort_by ", () => {
+      return request(app)
+        .get("/api/articles?order=asc&sort_by=author")
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBeGreaterThan(0);
+          expect(articles).toBeSortedBy("author", { ascending: true });
+        });
+    });
+    test("when passed a topic filter as the only query, responds with all articles with the selected topic with default order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(12);
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    test("when passed sort_by and topic filter , responds with selected topic articles with descending sort_by", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=votes")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(12);
+          expect(articles).toBeSortedBy("votes", { descending: true });
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    test("when passed order and topic filter , responds with selected topic articles correct order by created_at", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&order=ASC")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(12);
+          expect(articles).toBeSortedBy("created_at", { ascending: true });
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    test("when passed sort_by, order and topic filter, responds with selected topic articles with correct order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=title&order=ASC")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(12);
+          expect(articles).toBeSortedBy("title", { ascending: true });
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    test("when passed a valid topic but theres no articles under the topic, should return empty array", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(0);
+        });
+    });
   });
-  test("200 OK: responds with all articles with descending created_at by default", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then(({ body: { articles } }) => {
-        expect(articles.length).toBeGreaterThan(0);
-        expect(articles).toBeSortedBy("created_at", { descending: true });
-      });
+  describe("404 Not Found", () => {
+    test("when passed a invalid topic which does not exist in the db", () => {
+      return request(app)
+        .get("/api/articles?topic=notSuchTopic")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("No topic found for slug: notSuchTopic");
+        });
+    });
   });
-  test("200 OK: when passed a valid field name as sort_by, default as descending ", () => {
-    return request(app)
-      .get("/api/articles?sort_by=title")
-      .then(({ body: { articles } }) => {
-        expect(articles.length).toBeGreaterThan(0);
-        expect(articles).toBeSortedBy("title", { descending: true });
-      });
-  });
-  test("200 OK: when passed a valid field name as sort_by and a valid order", () => {
-    return request(app)
-      .get("/api/articles?sort_by=author&order=asc")
-      .then(({ body: { articles } }) => {
-        expect(articles.length).toBeGreaterThan(0);
-        expect(articles).toBeSortedBy("author", { ascending: true });
-      });
-  });
-  test("200 OK: when only passed a valid order without field name, should sort by created_at by default", () => {
-    return request(app)
-      .get("/api/articles?order=asc")
-      .then(({ body: { articles } }) => {
-        expect(articles.length).toBeGreaterThan(0);
-        expect(articles).toBeSortedBy("created_at", { ascending: true });
-      });
-  });
-  test("200 OK: when passed order before sort_by ", () => {
-    return request(app)
-      .get("/api/articles?order=asc&sort_by=author")
-      .then(({ body: { articles } }) => {
-        expect(articles.length).toBeGreaterThan(0);
-        expect(articles).toBeSortedBy("author", { ascending: true });
-      });
-  });
-  test("400 Bad Request: when passed an invalid field name as sort_by", () => {
-    return request(app)
-      .get("/api/articles?sort_by=harmfulCode")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid sort_by parameter!");
-      });
-  });
-  test("400 Bad Request: when passed an invalid field name as order", () => {
-    return request(app)
-      .get("/api/articles?order=harmfulCode")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid order parameter!");
-      });
-  });
-  test("400 Bad Request: if sort_by key is mis-spelled", () => {
-    return request(app)
-      .get("/api/articles?szzort_by=article_id")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid parameter: szzort_by");
-      });
-  });
-  test("400 Bad Request: if order key is mis-spelled", () => {
-    return request(app)
-      .get("/api/articles?sort_by=article_id&orrder=asc")
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid parameter: orrder");
-      });
+  describe("400 Bad Request", () => {
+    test("When passed an invalid field name as sort_by", () => {
+      return request(app)
+        .get("/api/articles?sort_by=harmfulCode")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid sort_by parameter!");
+        });
+    });
+    test("When passed an invalid field name as order", () => {
+      return request(app)
+        .get("/api/articles?order=harmfulCode")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid order parameter!");
+        });
+    });
+    test("When sort_by key is mis-spelled", () => {
+      return request(app)
+        .get("/api/articles?szzort_by=article_id")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid parameter: szzort_by");
+        });
+    });
+    test("When order key is mis-spelled", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&orrder=asc")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid parameter: orrder");
+        });
+    });
+    test("When topic key is mis-spelled", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc&topiic=cats")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid parameter: topiic");
+        });
+    });
   });
 });
 
