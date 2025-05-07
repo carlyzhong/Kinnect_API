@@ -1,3 +1,5 @@
 node_modules
 .env.*
 error-handling.md
+.DS_Store
+.DS_Store_db
