@@ -8,7 +8,7 @@ exports.selectCommentsByArticleId = (id) => {
       LEFT JOIN articles ON comments.article_id = articles.article_id
       WHERE comments.article_id = $1
       ORDER BY comments.created_at DESC;`,
-      [id]
+      [id],
     )
     .then(({ rows }) => {
       return rows;
@@ -34,7 +34,7 @@ exports.insertComment = (article_id, author, body) => {
   return db
     .query(
       `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;`,
-      [article_id, author, body]
+      [article_id, author, body],
     )
     .then(({ rows }) => {
       return rows[0];

@@ -21,7 +21,7 @@ exports.getArticles = (req, res, next) => {
   const validQueries = ["sort_by", "order", "topic"];
   const receivedQueries = Object.keys(req.query);
   const invalidQueries = receivedQueries.filter(
-    (query) => !validQueries.includes(query)
+    (query) => !validQueries.includes(query),
   );
 
   if (invalidQueries.length > 0) {

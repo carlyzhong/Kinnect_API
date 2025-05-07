@@ -59,26 +59,26 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       .then(() => {
         const insertTopicsQuery = format(
           `INSERT INTO topics (description, slug, img_url) VALUES %L;`,
-          formatData(topicData)
+          formatData(topicData),
         );
         return db.query(insertTopicsQuery);
       })
       .then(() => {
         const insertUsersQuery = format(
           `INSERT INTO users (username,name,avatar_url) VALUES %L;`,
-          formatData(userData)
+          formatData(userData),
         );
         return db.query(insertUsersQuery);
       })
       .then(() => {
         const timeConvertedArticles = articleData.map((article) =>
-          convertTimestampToDate(article)
+          convertTimestampToDate(article),
         );
         const insertArticlesQuery = format(
           `
           INSERT INTO articles (created_at,title,topic,author,body,votes,article_img_url) 
           VALUES %L RETURNING *;`,
-          formatData(timeConvertedArticles)
+          formatData(timeConvertedArticles),
         );
         return db.query(insertArticlesQuery);
       })
@@ -98,7 +98,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
           `
           INSERT INTO comments (article_id,body,votes,author,created_at) 
           VALUES %L`,
-          formattedComments
+          formattedComments,
         );
         return db.query(insertCommentsQuery);
       })
