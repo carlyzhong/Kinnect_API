@@ -1,14 +1,14 @@
-# DevDialogue API
+# PostHub API
 
 ## Hosted Version
 
-[DevDialogue - Live Demo](https://nc-news-ya2m.onrender.com)
+[PostHub - Live Demo](https://nc-news-ya2m.onrender.com)
 
 ## Project Summary
 
-Welcome to my first backend project 🎉DevDialogue!💬
+Welcome to my first backend project PostHub!💬
 
-DevDialogue represents my first dive into building a complete backend API from scratch.
+PostHub represents my first dive into building a complete backend API from scratch.
 
 This is a RESTful API that powers a website similar to Reddit where users can read news articles and join discussions. The API handles all backend functionality including article management, commenting, user infomation, and topic categorisation.
 
@@ -28,7 +28,7 @@ This is a RESTful API that powers a website similar to Reddit where users can re
 
 ### Installation
 
-#### 1. Clone the [repository](https://github.com/carlyzhong/DevDialogue-API):
+#### 1. Clone the [repository](https://github.com/carlyzhong/PostHub-API):
 
 #### 2. Install dependencies:
 
