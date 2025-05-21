@@ -1,14 +1,14 @@
-# PostHub API
+# Posted. - API
 
 ## Hosted Version
 
-[PostHub - Live Demo](https://nc-news-ya2m.onrender.com)
+[Posted - Live Demo](https://nc-news-ya2m.onrender.com)
 
 ## Project Summary
 
-Welcome to my first backend project PostHub!💬
+Welcome to my first backend project Posted!💬
 
-PostHub represents my first dive into building a complete backend API from scratch.
+Posted represents my first dive into building a complete backend API from scratch.
 
 This is a RESTful API that powers a website similar to Reddit where users can read news articles and join discussions. The API handles all backend functionality including article management, commenting, user infomation, and topic categorisation.
 
@@ -28,7 +28,7 @@ This is a RESTful API that powers a website similar to Reddit where users can re
 
 ### Installation
 
-#### 1. Clone the [repository](https://github.com/carlyzhong/PostHub-API):
+#### 1. Clone the repository
 
 #### 2. Install dependencies:
 
