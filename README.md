@@ -1,4 +1,4 @@
-# Kinnet - API
+# Kinnect - API
 
 ## Hosted Version
 
