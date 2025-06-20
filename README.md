@@ -1,16 +1,12 @@
-# Posted. - API
+# Kinnet - API
 
 ## Hosted Version
 
-[Posted - Live Demo](https://nc-news-ya2m.onrender.com)
+[Posted - Live Demo](https://kinnect-with.netlify.app)
 
 ## Project Summary
 
-Welcome to my first backend project Posted!💬
-
-Posted represents my first dive into building a complete backend API from scratch.
-
-This is a RESTful API that powers a website similar to Reddit where users can read news articles and join discussions. The API handles all backend functionality including article management, commenting, user infomation, and topic categorisation.
+This is a RESTful API that powers social media platform designed for families to connect and share moments in a private, secure environment.
 
 ## Table of Contents
 
@@ -44,14 +40,14 @@ For development:
 
 ```
 // .env.development
-PGDATABASE=dev_dialogue
+PGDATABASE=kinnect
 ```
 
 For testing:
 
 ```
 // .env.test
-PGDATABASE=dev_dialogue_test
+PGDATABASE=kinnect_test
 ```
 
 #### 4. Set up and seed the database:
@@ -144,6 +140,4 @@ GET /api/articles?topic=coding&sort_by=created_at&order=ASC
 
 For full details and example responses, check the `/api` endpoint.
 
-## Database Schema
-
-![database_schema](./image/database_schema.png)
+## Database Schema (stay tune. this is under progress)
