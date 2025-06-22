@@ -34,3 +34,7 @@ exports.birthdateGenerator = () => {
 exports.randomGenderGenerator = () => {
   return faker.person.sexType();
 };
+
+// const familypic = () => {
+//   return faker.image.urlLoremFlickr({ category: "family" });
+// };
