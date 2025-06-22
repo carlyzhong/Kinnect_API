@@ -3,4 +3,4 @@ exports.commentData = require("./comments.js");
 exports.topicData = require("./topics.js");
 exports.userData = require("./users.js");
 
-console.log(this.articleData);
+// console.log(this.userData);

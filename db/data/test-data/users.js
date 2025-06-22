@@ -1,24 +1,23 @@
+const { faker } = require("@faker-js/faker");
+const { portraitGenerator, randomGenderGenerator } = require("../utils");
+
+function createTestUser(username, firstname, lastname) {
+  const sex = randomGenderGenerator();
+  return {
+    username,
+    firstname,
+    lastname,
+    sex,
+    portrait_url: portraitGenerator(sex),
+    birthdate: faker.date.birthdate(),
+    email: faker.internet.email({ firstName: firstname, lastName: lastname }),
+    password: "qwerqwer",
+    bio: faker.person.bio(),
+  };
+}
+
 module.exports = [
-  {
-    username: "butter_bridge",
-    name: "jonny",
-    avatar_url:
-      "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
-  },
-  {
-    username: "icellusedkars",
-    name: "sam",
-    avatar_url: "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
-  },
-  {
-    username: "rogersop",
-    name: "paul",
-    avatar_url: "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
-  },
-  {
-    username: "lurker",
-    name: "do_nothing",
-    avatar_url:
-      "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-  },
+  createTestUser("test_user_1", "test_first_name_1", "test_last_name_1"),
+  createTestUser("test_user_2", "test_first_name_2", "test_last_name_2"),
+  // Add more users as needed
 ];

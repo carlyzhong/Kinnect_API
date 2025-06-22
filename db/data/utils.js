@@ -16,6 +16,21 @@ exports.imgUrlsGenerator = (length) => {
       height: 700,
     });
   }
-  console.log(urls);
   return urls;
+};
+
+exports.avatarGenerator = () => {
+  return faker.image.avatar();
+};
+
+exports.portraitGenerator = (sex) => {
+  return faker.image.personPortrait({ sex: sex, size: "256" });
+};
+
+exports.birthdateGenerator = () => {
+  return faker.date.birthdate();
+};
+
+exports.randomGenderGenerator = () => {
+  return faker.person.sexType();
 };
