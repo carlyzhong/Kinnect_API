@@ -10,9 +10,11 @@ const seed = async ({
   articleData,
   commentData,
   articlesTagsData,
+  familiesUsersData,
 }) => {
-  await db.query(`DROP TABLE IF EXISTS comments;`);
   await db.query(`DROP TABLE IF EXISTS articles_tags;`);
+  await db.query(`DROP TABLE IF EXISTS families_users;`);
+  await db.query(`DROP TABLE IF EXISTS comments;`);
   await db.query(`DROP TABLE IF EXISTS articles;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
   await db.query(`DROP TABLE IF EXISTS families;`);
@@ -80,6 +82,16 @@ const seed = async ({
       article_id INT NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
       tag_id INT NOT NULL REFERENCES tags(tag_id) ON DELETE CASCADE,
       UNIQUE(article_id, tag_id)
+    );
+  `);
+
+  await db.query(`
+    CREATE TABLE families_users ( 
+      family_user_id SERIAL PRIMARY KEY,
+      family_id INT NOT NULL REFERENCES families(family_id) ON DELETE CASCADE,
+      username VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
+      joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      UNIQUE(family_id, username)
     );
   `);
 
@@ -162,6 +174,18 @@ const seed = async ({
     ]),
   );
   await db.query(insertCommentsQuery);
+
+  if (familiesUsersData) {
+    const insertFamiliesUsersQuery = format(
+      `INSERT INTO families_users (family_id, username, joined_at) VALUES %L RETURNING *;`,
+      familiesUsersData.map((familyUser) => [
+        familyUser.family_id,
+        familyUser.username,
+        familyUser.joined_at,
+      ]),
+    );
+    await db.query(insertFamiliesUsersQuery);
+  }
 
   console.log("🪴Seeding is completed.");
 };

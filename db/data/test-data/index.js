@@ -4,5 +4,6 @@ exports.tagsData = require("./tags.js");
 exports.userData = require("./users.js");
 exports.familyData = require("./families.js");
 exports.articlesTagsData = require("./articles_tags.js");
+exports.familiesUsersData = require("./families_users.js");
 
 // console.log(this.commentData);

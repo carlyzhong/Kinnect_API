@@ -316,6 +316,62 @@ describe("Database schema and seed data", () => {
         expect(uniqueRows.length).toBeGreaterThan(0);
       });
     });
+
+    describe("families_users table", () => {
+      test("exists and has correct columns, primary key, and constraints", async () => {
+        const {
+          rows: [{ exists }],
+        } = await db.query(
+          `SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'families_users');`,
+        );
+        expect(exists).toBe(true);
+        const { rows: columns } = await db.query(
+          `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'families_users';`,
+        );
+        expect(columns).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              column_name: "family_user_id",
+              data_type: "integer",
+              is_nullable: "NO",
+            }),
+            expect.objectContaining({
+              column_name: "family_id",
+              data_type: "integer",
+              is_nullable: "NO",
+            }),
+            expect.objectContaining({
+              column_name: "username",
+              data_type: "character varying",
+              is_nullable: "NO",
+            }),
+            expect.objectContaining({
+              column_name: "joined_at",
+              data_type: "timestamp without time zone",
+            }),
+          ]),
+        );
+
+        const { rows: primaryKeyQueryResultRows } = await db.query(
+          `SELECT column_name FROM information_schema.key_column_usage WHERE table_name = 'families_users' AND constraint_name = 'families_users_pkey';`,
+        );
+        expect(primaryKeyQueryResultRows.length).toBe(1);
+        const primaryKeyColumnName = primaryKeyQueryResultRows[0].column_name;
+        expect(primaryKeyColumnName).toBe("family_user_id");
+
+        // Check unique constraint
+        const { rows: uniqueRows } = await db.query(`
+          SELECT tc.constraint_type
+          FROM information_schema.table_constraints tc
+          JOIN information_schema.constraint_column_usage ccu
+            ON tc.constraint_name = ccu.constraint_name
+          WHERE tc.table_name = 'families_users'
+            AND ccu.column_name = 'family_id'
+            AND tc.constraint_type = 'UNIQUE';
+        `);
+        expect(uniqueRows.length).toBeGreaterThan(0);
+      });
+    });
   });
 
   describe("Seed data insertion", () => {
@@ -388,6 +444,19 @@ describe("Database schema and seed data", () => {
           expect(row).toHaveProperty("article_tag_id");
           expect(row).toHaveProperty("article_id");
           expect(row).toHaveProperty("tag_id");
+        });
+      });
+    });
+    describe("families_users table", () => {
+      test("data inserted", async () => {
+        const { rows } = await db.query(`SELECT * FROM families_users;`);
+        console.log(rows);
+        expect(rows.length).toBe(data.familiesUsersData.length);
+        rows.forEach((row) => {
+          expect(row).toHaveProperty("family_user_id");
+          expect(row).toHaveProperty("family_id");
+          expect(row).toHaveProperty("username");
+          expect(row).toHaveProperty("joined_at");
         });
       });
     });
