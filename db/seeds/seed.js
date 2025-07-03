@@ -9,8 +9,10 @@ const seed = async ({
   familyData,
   articleData,
   commentData,
+  articlesTagsData,
 }) => {
   await db.query(`DROP TABLE IF EXISTS comments;`);
+  await db.query(`DROP TABLE IF EXISTS articles_tags;`);
   await db.query(`DROP TABLE IF EXISTS articles;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
   await db.query(`DROP TABLE IF EXISTS families;`);
@@ -72,6 +74,15 @@ const seed = async ({
     );
   `);
 
+  await db.query(`
+    CREATE TABLE articles_tags (
+      article_tag_id SERIAL PRIMARY KEY,
+      article_id INT NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
+      tag_id INT NOT NULL REFERENCES tags(tag_id) ON DELETE CASCADE,
+      UNIQUE(article_id, tag_id)
+    );
+  `);
+
   const insertTagsQuery = format(
     `INSERT INTO tags (tag_name) VALUES %L RETURNING *;`,
     tagsData.map((tag) => [tag.tag_name]),
@@ -130,6 +141,17 @@ const seed = async ({
   );
   const { rows: insertedArticles } = await db.query(insertArticlesQuery);
 
+  // Insert into articles_tags
+  const articlesTagsRows = articlesTagsData.map((articleTag) => [
+    articleTag.article_id,
+    articleTag.tag_id,
+  ]);
+  const insertArticlesTagsQuery = format(
+    `INSERT INTO articles_tags (article_id, tag_id) VALUES %L RETURNING *;`,
+    articlesTagsRows,
+  );
+  await db.query(insertArticlesTagsQuery);
+
   const insertCommentsQuery = format(
     `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,
     commentData.map((comment) => [
@@ -141,7 +163,7 @@ const seed = async ({
   );
   await db.query(insertCommentsQuery);
 
-  console.log("Seeding is completed.");
+  console.log("🪴Seeding is completed.");
 };
 
 module.exports = seed;
