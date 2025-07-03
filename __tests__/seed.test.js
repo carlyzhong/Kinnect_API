@@ -265,55 +265,56 @@ describe("Database schema and seed data", () => {
       expect(primaryKeyColumnName).toBe("comment_id");
     });
 
-    //check pk
-    test("articles_tags table exists and has correct columns, primary key, and constraints", async () => {
-      const {
-        rows: [{ exists }],
-      } = await db.query(
-        `SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'articles_tags');`,
-      );
-      expect(exists).toBe(true);
-      const { rows: columns } = await db.query(
-        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'articles_tags';`,
-      );
-      expect(columns).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            column_name: "article_tag_id",
-            data_type: "integer",
-            is_nullable: "NO",
-          }),
-          expect.objectContaining({
-            column_name: "article_id",
-            data_type: "integer",
-            is_nullable: "NO",
-          }),
-          expect.objectContaining({
-            column_name: "tag_id",
-            data_type: "integer",
-            is_nullable: "NO",
-          }),
-        ]),
-      );
+    describe("articles_tags table", () => {
+      test("exists and has correct columns, primary key, and constraints", async () => {
+        const {
+          rows: [{ exists }],
+        } = await db.query(
+          `SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'articles_tags');`,
+        );
+        expect(exists).toBe(true);
+        const { rows: columns } = await db.query(
+          `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'articles_tags';`,
+        );
+        expect(columns).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              column_name: "article_tag_id",
+              data_type: "integer",
+              is_nullable: "NO",
+            }),
+            expect.objectContaining({
+              column_name: "article_id",
+              data_type: "integer",
+              is_nullable: "NO",
+            }),
+            expect.objectContaining({
+              column_name: "tag_id",
+              data_type: "integer",
+              is_nullable: "NO",
+            }),
+          ]),
+        );
 
-      const { rows: primaryKeyQueryResultRows } = await db.query(
-        `SELECT column_name FROM information_schema.key_column_usage WHERE table_name = 'articles_tags' AND constraint_name = 'articles_tags_pkey';`,
-      );
-      expect(primaryKeyQueryResultRows.length).toBe(1);
-      const primaryKeyColumnName = primaryKeyQueryResultRows[0].column_name;
-      expect(primaryKeyColumnName).toBe("article_tag_id");
+        const { rows: primaryKeyQueryResultRows } = await db.query(
+          `SELECT column_name FROM information_schema.key_column_usage WHERE table_name = 'articles_tags' AND constraint_name = 'articles_tags_pkey';`,
+        );
+        expect(primaryKeyQueryResultRows.length).toBe(1);
+        const primaryKeyColumnName = primaryKeyQueryResultRows[0].column_name;
+        expect(primaryKeyColumnName).toBe("article_tag_id");
 
-      // Check unique constraint
-      const { rows: uniqueRows } = await db.query(`
-        SELECT tc.constraint_type
-        FROM information_schema.table_constraints tc
-        JOIN information_schema.constraint_column_usage ccu
-          ON tc.constraint_name = ccu.constraint_name
-        WHERE tc.table_name = 'articles_tags'
-          AND ccu.column_name = 'article_id'
-          AND tc.constraint_type = 'UNIQUE';
-      `);
-      expect(uniqueRows.length).toBeGreaterThan(0);
+        // Check unique constraint
+        const { rows: uniqueRows } = await db.query(`
+          SELECT tc.constraint_type
+          FROM information_schema.table_constraints tc
+          JOIN information_schema.constraint_column_usage ccu
+            ON tc.constraint_name = ccu.constraint_name
+          WHERE tc.table_name = 'articles_tags'
+            AND ccu.column_name = 'article_id'
+            AND tc.constraint_type = 'UNIQUE';
+        `);
+        expect(uniqueRows.length).toBeGreaterThan(0);
+      });
     });
   });
 
@@ -379,13 +380,15 @@ describe("Database schema and seed data", () => {
         expect(row).toHaveProperty("created_at");
       });
     });
-    test("articles_tags data inserted", async () => {
-      const { rows } = await db.query(`SELECT * FROM articles_tags;`);
-      expect(rows.length).toBe(data.articlesTagsData.length);
-      rows.forEach((row) => {
-        expect(row).toHaveProperty("article_tag_id");
-        expect(row).toHaveProperty("article_id");
-        expect(row).toHaveProperty("tag_id");
+    describe("articles_tags table", () => {
+      test("data inserted", async () => {
+        const { rows } = await db.query(`SELECT * FROM articles_tags;`);
+        expect(rows.length).toBe(data.articlesTagsData.length);
+        rows.forEach((row) => {
+          expect(row).toHaveProperty("article_tag_id");
+          expect(row).toHaveProperty("article_id");
+          expect(row).toHaveProperty("tag_id");
+        });
       });
     });
   });
