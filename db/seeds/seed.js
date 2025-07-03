@@ -12,7 +12,11 @@ const seed = async ({
   articlesTagsData,
   familiesUsersData,
   reactionsData,
+  articlesReactionsData,
+  commentsReactionsData,
 }) => {
+  await db.query(`DROP TABLE IF EXISTS comments_reactions;`);
+  await db.query(`DROP TABLE IF EXISTS articles_reactions;`);
   await db.query(`DROP TABLE IF EXISTS articles_tags;`);
   await db.query(`DROP TABLE IF EXISTS families_users;`);
   await db.query(`DROP TABLE IF EXISTS reactions;`);
@@ -104,6 +108,28 @@ const seed = async ({
     );
   `);
 
+  await db.query(`
+    CREATE TABLE articles_reactions (
+      article_reaction_id SERIAL PRIMARY KEY,
+      article_id INT NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
+      username VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
+      reaction_id INT NOT NULL REFERENCES reactions(reaction_id) ON DELETE CASCADE,
+      reacted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(article_id, username, reaction_id)
+    );
+  `);
+
+  await db.query(`
+    CREATE TABLE comments_reactions (
+      comment_reaction_id SERIAL PRIMARY KEY,
+      comment_id INT NOT NULL REFERENCES comments(comment_id) ON DELETE CASCADE,
+      username VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
+      reaction_id INT NOT NULL REFERENCES reactions(reaction_id) ON DELETE CASCADE,
+      reacted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(comment_id, username, reaction_id)
+    );
+  `);
+
   const insertTagsQuery = format(
     `INSERT INTO tags (tag_name) VALUES %L RETURNING *;`,
     tagsData.map((tag) => [tag.tag_name]),
@@ -189,6 +215,30 @@ const seed = async ({
     reactionsData.map((reaction) => [reaction.emoji]),
   );
   await db.query(insertReactionsQuery);
+
+  const insertArticlesReactionsQuery = format(
+    `INSERT INTO articles_reactions (article_id, username, reaction_id, reacted_at) VALUES %L RETURNING *;`,
+    articlesReactionsData.map((articleReaction) => [
+      articleReaction.article_id,
+      articleReaction.username,
+      articleReaction.reaction_id,
+      articleReaction.reacted_at,
+    ]),
+  );
+  await db.query(insertArticlesReactionsQuery);
+
+  if (commentsReactionsData) {
+    const insertCommentsReactionsQuery = format(
+      `INSERT INTO comments_reactions (comment_id, username, reaction_id, reacted_at) VALUES %L RETURNING *;`,
+      commentsReactionsData.map((commentReaction) => [
+        commentReaction.comment_id,
+        commentReaction.username,
+        commentReaction.reaction_id,
+        commentReaction.reacted_at,
+      ]),
+    );
+    await db.query(insertCommentsReactionsQuery);
+  }
 
   if (familiesUsersData) {
     const insertFamiliesUsersQuery = format(
