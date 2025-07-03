@@ -36,7 +36,8 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       birthdate DATE,
       email VARCHAR(255) UNIQUE NOT NULL,
       password VARCHAR(255) NOT NULL,
-      bio TEXT
+      bio TEXT,
+      timezone VARCHAR(255)
     );
   `);
 
@@ -49,7 +50,8 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       article_img_urls VARCHAR(1000)[] NOT NULL,
       family_id INT REFERENCES families(family_id) NOT NULL,
-      is_pinned BOOLEAN DEFAULT false
+      is_pinned BOOLEAN DEFAULT false,
+      location VARCHAR(255)
     );
   `);
 
@@ -81,7 +83,7 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
   await db.query(insertFamiliesQuery);
 
   const insertUsersQuery = format(
-    `INSERT INTO users (username, firstname, lastname, sex, portrait_url, birthdate, email, password, bio) VALUES %L RETURNING *;`,
+    `INSERT INTO users (username, firstname, lastname, sex, portrait_url, birthdate, email, password, bio, timezone) VALUES %L RETURNING *;`,
     userData.map((user) => [
       user.username,
       user.firstname,
@@ -92,12 +94,15 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       user.email,
       user.password,
       user.bio,
+      user.timezone,
     ])
   );
-  await db.query(insertUsersQuery);
+  const { rows: insertedUsers } = await db.query(insertUsersQuery);
+
+  const userLocationRef = createRef(insertedUsers, "username", "location");
 
   const insertArticlesQuery = format(
-    `INSERT INTO articles (title, author_username, body, created_at, article_img_urls, family_id, is_pinned) VALUES %L RETURNING *;`,
+    `INSERT INTO articles (title, author_username, body, created_at, article_img_urls, family_id, is_pinned, location) VALUES %L RETURNING *;`,
     articleData.map((article) => [
       article.title,
       article.author_username,
@@ -106,9 +111,10 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       article.article_img_urls,
       article.family_id,
       article.is_pinned,
+      userLocationRef[article.author_username],
     ])
   );
-  await db.query(insertArticlesQuery);
+  const { rows: insertedArticles } = await db.query(insertArticlesQuery);
 
   const insertCommentsQuery = format(
     `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,

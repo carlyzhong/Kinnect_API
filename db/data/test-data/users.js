@@ -13,6 +13,7 @@ function createTestUser(username, firstname, lastname) {
     email: faker.internet.email({ firstName: firstname, lastName: lastname }),
     password: "qwerqwer",
     bio: faker.person.bio(),
+    timezone: faker.location.timeZone(),
   };
 }
 

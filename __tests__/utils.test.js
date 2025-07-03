@@ -1,6 +1,5 @@
 const {
   convertTimestampToDate,
-  formatData,
   createRef,
 } = require("../db/seeds/utils");
 
@@ -38,98 +37,6 @@ describe("convertTimestampToDate", () => {
     const expected = { key: "value" };
     expect(result).toEqual(expected);
   });
-});
-
-describe("formatData", () => {
-  test("returns a array", () => {
-    const testData = [
-      {
-        username: "butter_bridge",
-        name: "jonny",
-        avatar_url:
-          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
-      },
-      {
-        username: "icellusedkars",
-        name: "sam",
-        avatar_url:
-          "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
-      },
-      {
-        username: "rogersop",
-        name: "paul",
-        avatar_url:
-          "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
-      },
-      {
-        username: "lurker",
-        name: "do_nothing",
-        avatar_url:
-          "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-      },
-    ];
-    expect(Array.isArray(formatData(testData))).toEqual(true);
-  });
-  test("returns array has equal length as the the passed on data", () => {
-    const testData = [
-      {
-        username: "butter_bridge",
-        name: "jonny",
-        avatar_url:
-          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
-      },
-      {
-        username: "icellusedkars",
-        name: "sam",
-        avatar_url:
-          "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
-      },
-      {
-        username: "rogersop",
-        name: "paul",
-        avatar_url:
-          "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
-      },
-      {
-        username: "lurker",
-        name: "do_nothing",
-        avatar_url:
-          "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-      },
-    ];
-    expect(formatData(testData).length).toEqual(4);
-  });
-  test("return array with correct values", () => {
-    const testData = [
-      {
-        username: "butter_bridge",
-        name: "jonny",
-        avatar_url: "fdas",
-      },
-      {
-        username: "icellusedkars",
-        name: "sam",
-        avatar_url: "fdas",
-      },
-      {
-        username: "rogersop",
-        name: "paul",
-        avatar_url: "321",
-      },
-      {
-        username: "lurker",
-        name: "do_nothing",
-        avatar_url: "321",
-      },
-    ];
-    expect(formatData(testData)).toEqual([
-      ["butter_bridge", "jonny", "fdas"],
-      ["icellusedkars", "sam", "fdas"],
-      ["rogersop", "paul", "321"],
-      ["lurker", "do_nothing", "321"],
-    ]);
-  });
-  test("", () => {});
 });
 
 describe("createRef", () => {
