@@ -5,7 +5,7 @@ function createTestFamilies(family_name, created_by_username, pic_url) {
   return {
     family_name,
     created_by: created_by_username,
-    avatar_url: pic_url,
+    img_url: pic_url,
     created_at: dateGenerator(),
   };
 }

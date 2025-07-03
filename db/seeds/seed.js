@@ -1,7 +1,7 @@
 const db = require("../connection");
 const format = require("pg-format");
 const { convertTimestampToDate, createRef } = require("./utils");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const seed = async ({
   tagsData,
@@ -79,11 +79,11 @@ const seed = async ({
   await db.query(insertTagsQuery);
 
   const insertFamiliesQuery = format(
-    `INSERT INTO families (family_name, created_by, avatar_url, created_at) VALUES %L RETURNING *;`,
+    `INSERT INTO families (family_name, created_by, img_url, created_at) VALUES %L RETURNING *;`,
     familyData.map((family) => [
       family.family_name,
       family.created_by,
-      family.avatar_url,
+      family.img_url,
       family.created_at,
     ]),
   );
@@ -113,7 +113,7 @@ const seed = async ({
   );
   const { rows: insertedUsers } = await db.query(insertUsersQuery);
 
-  const userLocationRef = createRef(insertedUsers, "username", "location");
+  const userTimezoneRef = createRef(insertedUsers, "username", "timezone");
 
   const insertArticlesQuery = format(
     `INSERT INTO articles (title, author_username, body, created_at, article_img_urls, family_id, is_pinned, location) VALUES %L RETURNING *;`,
@@ -122,10 +122,10 @@ const seed = async ({
       article.author_username,
       article.body,
       article.created_at,
-      article.article_img_urls,
+      `{${article.article_img_urls.map((url) => `"${url}"`).join(",")}}`,
       article.family_id,
       article.is_pinned,
-      userLocationRef[article.author_username],
+      userTimezoneRef[article.author_username],
     ]),
   );
   const { rows: insertedArticles } = await db.query(insertArticlesQuery);
@@ -133,7 +133,7 @@ const seed = async ({
   const insertCommentsQuery = format(
     `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,
     commentData.map((comment) => [
-      articleIdRef[comment.article_title],
+      insertedArticles[comment.article_title],
       comment.body,
       comment.author,
       comment.created_at,
