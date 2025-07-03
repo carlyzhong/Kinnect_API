@@ -1,10 +1,10 @@
-const { dateGenerator, imgUrlsGenerator } = require("../utils");
+const { dateGenerator, imgUrlsGenerator, loremParagraphsGenerator } = require("../utils");
 
 module.exports = [
   {
     title: "test_article_1",
     author_username: "test_user_1",
-    body: 'This is a testing article body for article "test_article_1". Just last week, I finally finished reading a book that had been sitting on my shelf for months. The sense of accomplishment was incredible, and I celebrated by treating myself to a homemade pizza night. The weather has been warming up, so I\'ve started taking evening walks around the neighborhood, which has done wonders for my mood. I also reconnected with an old friend over coffee, and we reminisced about our university days. Life feels refreshingly simple and joyful right now.',
+    body: `This is a testing article body for article "test_article_1". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(5),
     family_id: 1,
@@ -13,7 +13,7 @@ module.exports = [
   {
     title: "test_article_2",
     author_username: "test_user_1",
-    body: "This is a testing article body for article \"test_article_2\". Yesterday, I received some fantastic news at work—my team's project was selected for a company-wide showcase! We've been working tirelessly for months, and it's rewarding to see our efforts recognized. To celebrate, we ordered lunch from our favorite local spot and shared stories about our journeys. Outside of work, I've started learning to play the guitar, and though my fingers are sore, I'm enjoying every minute of it. Here's to new beginnings and small victories!",
+    body: `This is a testing article body for article "test_article_2". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(3),
     family_id: 1,
@@ -22,7 +22,7 @@ module.exports = [
   {
     title: "test_article_3",
     author_username: "test_user_1",
-    body: 'This is a testing article body for article "test_article_3". Over the weekend, I hosted a small get-together with close friends to celebrate my birthday. We played board games, laughed until our sides hurt, and enjoyed a homemade chocolate cake. It was a much-needed break from the usual routine. I also started a new fitness challenge, aiming to run three times a week. The first run was tough, but I\'m determined to stick with it. Life feels full of promise and positive energy right now.',
+    body: `This is a testing article body for article "test_article_3". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(4),
     family_id: 1,
@@ -31,7 +31,7 @@ module.exports = [
   {
     title: "test_article_4",
     author_username: "test_user_2",
-    body: "This is a testing article body for article \"test_article_4\". My family recently adopted a rescue dog, and it's been an adventure adjusting to our new furry friend. She's full of energy and has already learned a few tricks. The kids adore her, and our home feels livelier than ever. In other news, I've been experimenting with new recipes, and last night's homemade curry was a hit. It's the little things that make each day special, and I'm grateful for these moments.",
+    body: `This is a testing article body for article "test_article_4". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(2),
     family_id: 1,
@@ -40,7 +40,7 @@ module.exports = [
   {
     title: "test_article_5",
     author_username: "test_user_2",
-    body: 'This is a testing article body for article "test_article_5". After months of saving, I finally bought a new bicycle and have been exploring local trails every weekend. The fresh air and scenic views are a welcome escape from daily stresses. I also attended a virtual cooking class with friends, and we all attempted to make sushi for the first time. It was messy but so much fun! These new experiences are making this season of life feel vibrant and exciting.',
+    body: `This is a testing article body for article "test_article_5". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(6),
     family_id: 1,
@@ -49,7 +49,7 @@ module.exports = [
   {
     title: "test_article_6",
     author_username: "test_user_2",
-    body: "This is a testing article body for article \"test_article_6\". I recently started volunteering at a local animal shelter, and it's been incredibly rewarding. Meeting new people and helping care for the animals has brought a new sense of purpose to my days. I also tried my hand at baking sourdough bread, and while the first loaf was a bit dense, I'm eager to improve. Life is busy but fulfilling, and I'm enjoying the journey.",
+    body: `This is a testing article body for article "test_article_6". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(1),
     family_id: 1,
@@ -58,7 +58,7 @@ module.exports = [
   {
     title: "test_article_7",
     author_username: "test_user_1",
-    body: "This is a testing article body for article \"test_article_7\". Last month, I moved into a new apartment closer to work. The commute is much shorter, and I've enjoyed decorating the space to make it feel like home. I hosted a small housewarming dinner, and it was wonderful to see friends and share laughter in my new place. I'm also planning a weekend getaway to the mountains for some much-needed relaxation and fresh air.",
+    body: `This is a testing article body for article "test_article_7". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(4),
     family_id: 2,
@@ -67,7 +67,7 @@ module.exports = [
   {
     title: "test_article_8",
     author_username: "test_user_1",
-    body: "This is a testing article body for article \"test_article_8\". My garden has started to bloom, and I've been spending more time outdoors tending to the flowers and vegetables. It's peaceful and rewarding to see the progress each day. I also rejoined a local book club, and our latest discussion was both lively and insightful. These simple pleasures are making life feel more balanced and joyful.",
+    body: `This is a testing article body for article "test_article_8". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(3),
     family_id: 2,
@@ -76,7 +76,7 @@ module.exports = [
   {
     title: "test_article_9",
     author_username: "test_user_1",
-    body: "This is a testing article body for article \"test_article_9\". I recently completed a challenging online course and earned a certification I'd been working toward for months. The sense of achievement is motivating me to set new goals. To celebrate, I treated myself to a movie night with my favorite snacks. I've also started a daily journaling habit, which has helped me reflect and stay positive. Here's to growth and new opportunities!",
+    body: `This is a testing article body for article "test_article_9". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(5),
     family_id: 2,
@@ -85,7 +85,7 @@ module.exports = [
   {
     title: "test_article_10",
     author_username: "test_user_2",
-    body: "This is a testing article body for article \"test_article_10\". My friends and I organized a virtual trivia night, and it turned out to be a huge success. We laughed, learned new facts, and enjoyed some friendly competition. I've also been experimenting with digital art in my free time, discovering new techniques and styles. It's been a creative and uplifting experience, and I'm excited to see where this new hobby takes me.",
+    body: `This is a testing article body for article "test_article_10". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(2),
     family_id: 2,
@@ -94,7 +94,7 @@ module.exports = [
   {
     title: "test_article_11",
     author_username: "test_user_2",
-    body: 'This is a testing article body for article "test_article_11". I recently participated in a community clean-up event, and it was inspiring to see so many people come together for a good cause. The park looks better than ever, and I made a few new friends along the way. I\'ve also been trying out new recipes, and my latest creation—a lemon tart—was a hit with my family. Life feels meaningful and connected.',
+    body: `This is a testing article body for article "test_article_11". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(4),
     family_id: 2,
@@ -103,7 +103,7 @@ module.exports = [
   {
     title: "test_article_12",
     author_username: "test_user_2",
-    body: 'This is a testing article body for article "test_article_12". After months of planning, I finally took a weekend trip to the coast. The ocean breeze and sound of the waves were incredibly refreshing. I spent time exploring local shops, trying new foods, and capturing beautiful photos. The change of scenery was just what I needed to recharge and gain a fresh perspective on things.',
+    body: `This is a testing article body for article "test_article_12". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(3),
     family_id: 2,
@@ -112,7 +112,7 @@ module.exports = [
   {
     title: "test_article_13",
     author_username: "test_user_1",
-    body: "This is a testing article body for article \"test_article_13\". I recently started a new job, and the transition has been both exciting and challenging. My colleagues have been welcoming, and I'm learning a lot every day. Outside of work, I've been focusing on self-care, taking long walks, and practicing mindfulness. These changes have brought a renewed sense of purpose and happiness to my life.",
+    body: `This is a testing article body for article "test_article_13". ${loremParagraphsGenerator()}`,
     created_at: dateGenerator(),
     article_img_urls: imgUrlsGenerator(5),
     family_id: 2,
