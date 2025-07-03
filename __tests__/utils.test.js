@@ -1,7 +1,4 @@
-const {
-  convertTimestampToDate,
-  createRef,
-} = require("../db/seeds/utils");
+const { convertTimestampToDate, createRef } = require("../db/seeds/utils");
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -57,7 +54,7 @@ describe("createRef", () => {
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       },
     ];
-    expect(createRef(input)).toEqual({
+    expect(createRef(input, "title", "article_id")).toEqual({
       "Seven inspirational thought leaders from Manchester UK": 10,
     });
   });
@@ -75,17 +72,6 @@ describe("createRef", () => {
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       },
       {
-        article_id: 12,
-        title: "Moustache",
-        topic: "mitch",
-        author: "butter_bridge",
-        body: "Have you seen the size of that thing?",
-        created_at: "2020-10-11T11:24:00.000Z",
-        votes: 0,
-        article_img_url:
-          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-      },
-      {
         article_id: 13,
         title: "Another article about Mitch",
         topic: "mitch",
@@ -97,9 +83,8 @@ describe("createRef", () => {
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       },
     ];
-    expect(createRef(input)).toEqual({
+    expect(createRef(input, "title", "article_id")).toEqual({
       "Am I a cat?": 11,
-      Moustache: 12,
       "Another article about Mitch": 13,
     });
   });

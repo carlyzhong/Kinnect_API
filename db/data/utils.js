@@ -41,8 +41,8 @@ exports.randomGenderGenerator = () => {
 
 exports.loremParagraphsGenerator = () => {
   return faker.lorem.paragraphs({ min: 1, max: 5 });
-}
+};
 
 exports.loremSentencesGenerator = () => {
   return faker.lorem.sentences({ min: 1, max: 3 });
-}
+};

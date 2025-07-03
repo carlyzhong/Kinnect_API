@@ -2,7 +2,13 @@ const db = require("../connection");
 const format = require("pg-format");
 const { convertTimestampToDate, createRef } = require("./utils");
 
-const seed = async ({ tagsData, userData, familyData, articleData, commentData }) => {
+const seed = async ({
+  tagsData,
+  userData,
+  familyData,
+  articleData,
+  commentData,
+}) => {
   await db.query(`DROP TABLE IF EXISTS comments;`);
   await db.query(`DROP TABLE IF EXISTS articles;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
@@ -67,7 +73,7 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
 
   const insertTagsQuery = format(
     `INSERT INTO tags (tag_name) VALUES %L RETURNING *;`,
-    tagsData.map((tag) => [tag.tag_name])
+    tagsData.map((tag) => [tag.tag_name]),
   );
   await db.query(insertTagsQuery);
 
@@ -78,7 +84,7 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       family.created_by,
       family.avatar_url,
       family.created_at,
-    ])
+    ]),
   );
   await db.query(insertFamiliesQuery);
 
@@ -95,7 +101,7 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       user.password,
       user.bio,
       user.timezone,
-    ])
+    ]),
   );
   const { rows: insertedUsers } = await db.query(insertUsersQuery);
 
@@ -112,7 +118,7 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       article.family_id,
       article.is_pinned,
       userLocationRef[article.author_username],
-    ])
+    ]),
   );
   const { rows: insertedArticles } = await db.query(insertArticlesQuery);
 
@@ -123,7 +129,7 @@ const seed = async ({ tagsData, userData, familyData, articleData, commentData }
       comment.body,
       comment.author,
       comment.created_at,
-    ])
+    ]),
   );
   await db.query(insertCommentsQuery);
 

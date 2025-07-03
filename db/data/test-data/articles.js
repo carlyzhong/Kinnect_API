@@ -1,4 +1,8 @@
-const { dateGenerator, imgUrlsGenerator, loremParagraphsGenerator } = require("../utils");
+const {
+  dateGenerator,
+  imgUrlsGenerator,
+  loremParagraphsGenerator,
+} = require("../utils");
 
 module.exports = [
   {
