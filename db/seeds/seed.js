@@ -1,110 +1,127 @@
 const db = require("../connection");
-var format = require("pg-format");
-const { convertTimestampToDate, formatData, createRef } = require("./utils");
+const format = require("pg-format");
+const { convertTimestampToDate, createRef } = require("./utils");
 
-const seed = ({ topicData, userData, articleData, commentData }) => {
-  return (
-    db
-      //drop tables for testing
-      .query("DROP TABLE IF EXISTS temp_comments;")
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS comments;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS articles;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS users;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS topics;");
-      })
+const seed = async ({ tagsData, userData, familyData, articleData, commentData }) => {
+  await db.query(`DROP TABLE IF EXISTS comments;`);
+  await db.query(`DROP TABLE IF EXISTS articles;`);
+  await db.query(`DROP TABLE IF EXISTS users;`);
+  await db.query(`DROP TABLE IF EXISTS families;`);
+  await db.query(`DROP TABLE IF EXISTS tags;`);
 
-      //create tables
-      .then(() => {
-        return db.query(`CREATE TABLE topics(
-  slug VARCHAR(200) PRIMARY KEY NOT NULL,
-  description VARCHAR(200) NOT NULL,
-  img_url VARCHAR(1000) NOT NULL);`);
-      })
+  await db.query(`
+    CREATE TABLE tags (
+      tag_id SERIAL PRIMARY KEY,
+      tag_name VARCHAR(255) UNIQUE NOT NULL
+    );
+  `);
 
-      .then(() => {
-        return db.query(`CREATE TABLE users(
-  username VARCHAR(50) PRIMARY KEY NOT NULL UNIQUE,
-  name VARCHAR(50) NOT NULL,
-  avatar_url VARCHAR(1000) NOT NULL);`);
-      })
-      .then(() => {
-        return db.query(`CREATE TABLE articles(
-  article_id SERIAL PRIMARY KEY,
-  title VARCHAR(500) NOT NULL,
-  topic VARCHAR(200) REFERENCES topics(slug),
-  author VARCHAR(50) REFERENCES users(username),
-  body TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  votes INT DEFAULT 0,
-  article_img_url VARCHAR(1000) NOT NULL);`);
-      })
-      .then(() => {
-        return db.query(`CREATE TABLE comments(
-  comment_id SERIAL PRIMARY KEY,
-  article_id INT REFERENCES articles(article_id),
-  body TEXT,
-  votes INT DEFAULT 0,
-  author VARCHAR(50) REFERENCES users(username),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`);
-      })
+  await db.query(`
+    CREATE TABLE families (
+      family_id SERIAL PRIMARY KEY,
+      family_name VARCHAR(255) NOT NULL,
+      created_by VARCHAR(255) NOT NULL,
+      img_url VARCHAR(1000),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
 
-      //insert table content
-      .then(() => {
-        const insertTopicsQuery = format(
-          `INSERT INTO topics (description, slug, img_url) VALUES %L;`,
-          formatData(topicData),
-        );
-        return db.query(insertTopicsQuery);
-      })
-      .then(() => {
-        const insertUsersQuery = format(
-          `INSERT INTO users (username,name,avatar_url) VALUES %L;`,
-          formatData(userData),
-        );
-        return db.query(insertUsersQuery);
-      })
-      .then(() => {
-        const timeConvertedArticles = articleData.map((article) =>
-          convertTimestampToDate(article),
-        );
-        const insertArticlesQuery = format(
-          `
-          INSERT INTO articles (created_at,title,topic,author,body,votes,article_img_url) 
-          VALUES %L RETURNING *;`,
-          formatData(timeConvertedArticles),
-        );
-        return db.query(insertArticlesQuery);
-      })
-      .then((result) => {
-        articleIDReference = createRef(result.rows);
-        const formattedComments = commentData.map((comment) => {
-          const timeConvertedComment = convertTimestampToDate(comment);
-          return [
-            articleIDReference[comment.article_title],
-            timeConvertedComment.body,
-            timeConvertedComment.votes,
-            timeConvertedComment.author,
-            timeConvertedComment.created_at,
-          ];
-        });
-        const insertCommentsQuery = format(
-          `
-          INSERT INTO comments (article_id,body,votes,author,created_at) 
-          VALUES %L`,
-          formattedComments,
-        );
-        return db.query(insertCommentsQuery);
-      })
-      .then(() => {
-        console.log("Seeding is completed.");
-      })
+  await db.query(`
+    CREATE TABLE users (
+      username VARCHAR(50) PRIMARY KEY NOT NULL UNIQUE,
+      firstname VARCHAR(50) NOT NULL,
+      lastname VARCHAR(50) NOT NULL,
+      sex VARCHAR(20) NOT NULL,
+      portrait_url VARCHAR(1000),
+      birthdate DATE,
+      email VARCHAR(255) UNIQUE NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      bio TEXT
+    );
+  `);
+
+  await db.query(`
+    CREATE TABLE articles (
+      article_id SERIAL PRIMARY KEY,
+      title VARCHAR(500) NOT NULL,
+      author_username VARCHAR(50) REFERENCES users(username),
+      body TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      article_img_urls VARCHAR(1000)[] NOT NULL,
+      family_id INT REFERENCES families(family_id) NOT NULL,
+      is_pinned BOOLEAN DEFAULT false
+    );
+  `);
+
+  await db.query(`
+    CREATE TABLE comments (
+      comment_id SERIAL PRIMARY KEY,
+      article_id INT REFERENCES articles(article_id),
+      body TEXT,
+      author VARCHAR(50) REFERENCES users(username),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+  const insertTagsQuery = format(
+    `INSERT INTO tags (tag_name) VALUES %L RETURNING *;`,
+    tagsData.map((tag) => [tag.tag_name])
   );
+  await db.query(insertTagsQuery);
+
+  const insertFamiliesQuery = format(
+    `INSERT INTO families (family_name, created_by, avatar_url, created_at) VALUES %L RETURNING *;`,
+    familyData.map((family) => [
+      family.family_name,
+      family.created_by,
+      family.avatar_url,
+      family.created_at,
+    ])
+  );
+  await db.query(insertFamiliesQuery);
+
+  const insertUsersQuery = format(
+    `INSERT INTO users (username, firstname, lastname, sex, portrait_url, birthdate, email, password, bio) VALUES %L RETURNING *;`,
+    userData.map((user) => [
+      user.username,
+      user.firstname,
+      user.lastname,
+      user.sex,
+      user.portrait_url,
+      user.birthdate,
+      user.email,
+      user.password,
+      user.bio,
+    ])
+  );
+  await db.query(insertUsersQuery);
+
+  const insertArticlesQuery = format(
+    `INSERT INTO articles (title, author_username, body, created_at, article_img_urls, family_id, is_pinned) VALUES %L RETURNING *;`,
+    articleData.map((article) => [
+      article.title,
+      article.author_username,
+      article.body,
+      article.created_at,
+      article.article_img_urls,
+      article.family_id,
+      article.is_pinned,
+    ])
+  );
+  await db.query(insertArticlesQuery);
+
+  const insertCommentsQuery = format(
+    `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,
+    commentData.map((comment) => [
+      articleIdRef[comment.article_title],
+      comment.body,
+      comment.author,
+      comment.created_at,
+    ])
+  );
+  await db.query(insertCommentsQuery);
+
+  console.log("Seeding is completed.");
 };
+
 module.exports = seed;

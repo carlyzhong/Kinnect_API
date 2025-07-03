@@ -38,3 +38,11 @@ exports.randomGenderGenerator = () => {
 // const familypic = () => {
 //   return faker.image.urlLoremFlickr({ category: "family" });
 // };
+
+exports.loremParagraphsGenerator = () => {
+  return faker.lorem.paragraphs({ min: 1, max: 5 });
+}
+
+exports.loremSentencesGenerator = () => {
+  return faker.lorem.sentences({ min: 1, max: 3 });
+}

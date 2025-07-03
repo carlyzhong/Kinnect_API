@@ -3,7 +3,7 @@ module.exports = [
     title: "Running a Node App",
     topic: "coding",
     author: "jessjelly",
-    body: "This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+    body: "Just last week, I finally finished reading a book that had been sitting on my shelf for months. The sense of accomplishment was incredible, and I celebrated by treating myself to a homemade pizza night. The weather has been warming up, so I\'ve started taking evening walks around the neighborhood, which has done wonders for my mood. I also reconnected with an old friend over coffee, and we reminisced about our university days. Life feels refreshingly simple and joyful right now.',",
     created_at: 1604728980000,
     votes: 0,
     article_img_url:
@@ -13,7 +13,7 @@ module.exports = [
     title: "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
     topic: "coding",
     author: "jessjelly",
-    body: "Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+    body: "Yesterday, I received some fantastic news at work—my team's project was selected for a company-wide showcase! We've been working tirelessly for months, and it's rewarding to see our efforts recognized. To celebrate, we ordered lunch from our favorite local spot and shared stories about our journeys. Outside of work, I've started learning to play the guitar, and though my fingers are sore, I'm enjoying every minute of it. Here's to new beginnings and small victories!",
     created_at: 1589418120000,
     votes: 0,
     article_img_url:
@@ -23,7 +23,7 @@ module.exports = [
     title: "22 Amazing open source React projects",
     topic: "coding",
     author: "happyamy2016",
-    body: "This is a collection of open source apps built with React.JS library. In this observation, we compared nearly 800 projects to pick the top 22. (React Native: 11, React: 11). To evaluate the quality, Mybridge AI considered a variety of factors to determine how useful the projects are for programmers. To give you an idea on the quality, the average number of Github stars from the 22 projects was 1,681.",
+    body: "Over the weekend, I hosted a small get-together with close friends to celebrate my birthday. We played board games, laughed until our sides hurt, and enjoyed a homemade chocolate cake. It was a much-needed break from the usual routine. I also started a new fitness challenge, aiming to run three times a week. The first run was tough, but I\'m determined to stick with it. Life feels full of promise and positive energy right now.",
     created_at: 1582974720000,
     votes: 0,
     article_img_url:
@@ -33,7 +33,7 @@ module.exports = [
     title: "Making sense of Redux",
     topic: "coding",
     author: "jessjelly",
-    body: "When I first started learning React, I remember reading lots of articles about the different technologies associated with it. In particular, this one article stood out. It mentions how confusing the ecosystem is, and how developers often feel they have to know ALL of the ecosystem before using React. And as someone who’s used React daily for the past 8 months or so, I can definitely say that I’m still barely scratching the surface in terms of understanding how the entire ecosystem works! But my time spent using React has given me some insight into when and why it might be appropriate to use another technology — Redux (a variant of the Flux architecture).",
+    body: "My family recently adopted a rescue dog, and it's been an adventure adjusting to our new furry friend. She's full of energy and has already learned a few tricks. The kids adore her, and our home feels livelier than ever. In other news, I've been experimenting with new recipes, and last night's homemade curry was a hit. It's the little things that make each day special, and I'm grateful for these moments.",
     created_at: 1599858720000,
     votes: 0,
     article_img_url:
@@ -43,7 +43,7 @@ module.exports = [
     title: "Please stop worrying about Angular 3",
     topic: "coding",
     author: "jessjelly",
-    body: "Another Angular version planned already? Whaaaat? Didn’t Angular 2 just ship? Why Angular 3? What? Why? First off, there is no massive rewrite, and won’t be for Angular 3. Secondly, let me explain the future of Angular 2 and what Angular 3, Angular 4 will mean for you.",
+    body: "After months of saving, I finally bought a new bicycle and have been exploring local trails every weekend. The fresh air and scenic views are a welcome escape from daily stresses. I also attended a virtual cooking class with friends, and we all attempted to make sushi for the first time. It was messy but so much fun! These new experiences are making this season of life feel vibrant and exciting.",
     created_at: 1587488760000,
     votes: 0,
     article_img_url:
@@ -54,7 +54,7 @@ module.exports = [
       "JavaScript’s Apply, Call, and Bind Methods are Essential for JavaScript Professionals",
     topic: "coding",
     author: "grumpy19",
-    body: "Functions are objects in JavaScript, as you should know by now, if you have read any of the prerequisite articles. And as objects, functions have methods, including the powerful Apply, Call, and Bind methods. On the one hand, Apply and Call are nearly identical and are frequently used in JavaScript for borrowing methods and for setting the this value explicitly. We also use Apply for variable-arity functions; you will learn more about this in a bit.",
+    body: "I recently started volunteering at a local animal shelter, and it's been incredibly rewarding. Meeting new people and helping care for the animals has brought a new sense of purpose to my days. I also tried my hand at baking sourdough bread, and while the first loaf was a bit dense, I'm eager to improve. Life is busy but fulfilling, and I'm enjoying the journey.",
     created_at: 1605107340000,
     votes: 0,
     article_img_url:
@@ -74,7 +74,7 @@ module.exports = [
     title: "Express.js: A Server-Side JavaScript Framework",
     topic: "coding",
     author: "cooljmessy",
-    body: "You’re probably aware that JavaScript is the programming language most often used to add interactivity to the front end of a website, but its capabilities go far beyond that—entire sites can be built on JavaScript, extending it from the front to the back end, seamlessly. Express.js and Node.js gave JavaScript newfound back-end functionality—allowing developers to build software with JavaScript on the server side for the first time. Together, they make it possible to build an entire site with JavaScript: You can develop server-side applications with Node.js and then publish those Node.js apps as websites with Express. Because Node.js itself wasn’t intended to build websites, the Express framework is able to layer in built-in structure and functions needed to actually build a site. It’s a pretty lightweight framework that’s great for giving developers extra, built-in web application features and the Express API without overriding the already robust, feature-packed Node.js platform. In short, Express and Node are changing the way developers build websites.",
+    body: "Last month, I moved into a new apartment closer to work. The commute is much shorter, and I've enjoyed decorating the space to make it feel like home. I hosted a small housewarming dinner, and it was wonderful to see friends and share laughter in my new place. I'm also planning a weekend getaway to the mountains for some much-needed relaxation and fresh air.",
     created_at: 1601940180000,
     votes: 0,
     article_img_url:
@@ -95,7 +95,7 @@ module.exports = [
       "An Introduction to JavaScript Object Notation (JSON) in JavaScript and .NET",
     topic: "coding",
     author: "cooljmessy",
-    body: "When designing an application that will communicate with a remote computer, a data format and exchange protocol must be selected. There are a variety of open, standardized options, and the ideal choice depends on the applications requirements and pre-existing functionality. For example, SOAP-based web services format the data in an XML payload wrapped within a SOAP envelope. While XML works well for many application scenarios, it has some drawbacks that make it less than ideal for others. One such space where XML is often less than ideal is with Ajax-style web applications. Ajax is a technique used for building interactive web applications that provide a snappier user experience through the use of out-of-band, lightweight calls to the web server in lieu of full-page postbacks. These asynchronous calls are initiated on the client using JavaScript and involve formatting data, sending it to a web server, and parsing and working with the returned data. While most browsers can construct, send, and parse XML, JavaScript Object Notation (or JSON) provides a standardized data exchange format that is better-suited for Ajax-style web applications. JSON is an open, text-based data exchange format (see RFC 4627). Like XML, it is human-readable, platform independent, and enjoys a wide availability of implementations. Data formatted according to the JSON standard is lightweight and can be parsed by JavaScript implementations with incredible ease, making it an ideal data exchange format for Ajax web applications. Since it is primarily a data format, JSON is not limited to just Ajax web applications, and can be used in virtually any scenario where applications need to exchange or store structured information as text. This article examines the JSON standard, its relationship to JavaScript, and how it compares to XML. Jayrock, an open-source JSON implementation for .NET, is discussed and examples of creating and parsing JSON messages are provided in JavaScript and C#.",
+    body: "This is a testing article body for article \"test_article_8\". My garden has started to bloom, and I've been spending more time outdoors tending to the flowers and vegetables. It's peaceful and rewarding to see the progress each day. I also rejoined a local book club, and our latest discussion was both lively and insightful. These simple pleasures are making life feel more balanced and joyful.",
     created_at: 1593692580000,
     votes: 0,
     article_img_url:
@@ -105,7 +105,7 @@ module.exports = [
     title: "Designing Better JavaScript APIs",
     topic: "coding",
     author: "tickle122",
-    body: "At some point or another, you will find yourself writing JavaScript code that exceeds the couple of lines from a jQuery plugin. Your code will do a whole lot of things; it will (ideally) be used by many people who will approach your code differently. They have different needs, knowledge and expectations.",
+    body: "I recently completed a challenging online course and earned a certification I'd been working toward for months. The sense of achievement is motivating me to set new goals. To celebrate, I treated myself to a movie night with my favorite snacks. I've also started a daily journaling habit, which has helped me reflect and stay positive. Here's to growth and new opportunities!",
     created_at: 1594080780000,
     votes: 0,
     article_img_url:
@@ -115,7 +115,7 @@ module.exports = [
     title: "The battle for Node.js security has only begun",
     topic: "coding",
     author: "tickle122",
-    body: "The founder of the Node Security Project says Node.js still has common vulnerabilities, but progress has been made to make it more secure. Appearing at the recent Node Community Convention in San Francisco, project founder Adam Baldwin, chief security officer at Web consulting company &yet, emphasized risks, protections, and progress. Baldwin sees four risks within the Node ecosystem pertinent to the enterprise: the code dependency tree, bugs, malicious actors, and people. I think of [the dependency tree] more as the dependency iceberg, to be honest, Baldwin said, where your code is the ship and your dependencies that you have with your packaged JSON is that little tiny iceberg at the top. But developers need to be aware of the massive iceberg underneath, he stressed.",
+    body: "My friends and I organized a virtual trivia night, and it turned out to be a huge success. We laughed, learned new facts, and enjoyed some friendly competition. I've also been experimenting with digital art in my free time, discovering new techniques and styles. It's been a creative and uplifting experience, and I'm excited to see where this new hobby takes me.",
     created_at: 1605446700000,
     votes: 0,
     article_img_url:
@@ -135,7 +135,7 @@ module.exports = [
     title: "Who Will Manage Your Club in 2021?",
     topic: "football",
     author: "happyamy2016",
-    body: "Managerial changes are too common in the modern day game. Already in the 16/17 season, we have seen 14 managers lose their job from the Premier League to League Two. Swansea’s Francesco Guidolin became the first top division manager to lose his job but already question marks are raised regarding the future of the likes of David Moyes and Mike Phelan.",
+    body: "I recently participated in a community clean-up event, and it was inspiring to see so many people come together for a good cause. The park looks better than ever, and I made a few new friends along the way. I\'ve also been trying out new recipes, and my latest creation—a lemon tart—was a hit with my family. Life feels meaningful and connected.",
     created_at: 1593011640000,
     votes: 0,
     article_img_url:
@@ -155,7 +155,7 @@ module.exports = [
     title: "History of FC Barcelona",
     topic: "football",
     author: "weegembump",
-    body: "The history of Futbol Club Barcelona goes from the football club's founding in 1899 and up to current time. FC Barcelona, also known simply as Barcelona and familiarly as Barça, is based in Barcelona, Catalonia, Spain. The team was founded in 1899 by a group of Swiss, English and Spanish footballers led by Joan Gamper. The club played amateur football until 1910 in various regional competitions. In 1910, the club participated in their first of many European competitions, and has since amassed ten UEFA trophies and a sextuple. In 1928, Barcelona co-founded La Liga, the top-tier in Spanish football, along with a string of other clubs. As of 2016, Barcelona has never been relegated from La Liga, a record they share with Athletic Bilbao and arch-rival Real Madrid. The history of Barcelona has often been politically. Though it is a club created and run by foreigners, Barcelona gradually became a club associated with Catalan values. In Spain's transition to autocracy in 1925, Catalonia became increasingly hostile towards the central government in Madrid. The hostility enhanced Barcelona's image as a focal point for Catalonism, and when Francisco Franco banned the use of the Catalan language, the stadium of Barcelona became one of the few places the people could express their dissatisfaction. The Spanish transition to democracy in 1978 has not dampened the club's image of Catalan pride. In the 2000s – a period of sporting success in the club and an increased focus on Catalan players – club officials have openly called for Catalonia to become an independent state.",
+    body: "I recently started a new job, and the transition has been both exciting and challenging. My colleagues have been welcoming, and I'm learning a lot every day. Outside of work, I've been focusing on self-care, taking long walks, and practicing mindfulness. These changes have brought a renewed sense of purpose and happiness to my life.",
     created_at: 1596413640000,
     votes: 0,
     article_img_url:
