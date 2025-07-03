@@ -20,5 +20,4 @@ function createTestUser(username, firstname, lastname) {
 module.exports = [
   createTestUser("test_user_1", "test_first_name_1", "test_last_name_1"),
   createTestUser("test_user_2", "test_first_name_2", "test_last_name_2"),
-  // Add more users as needed
 ];

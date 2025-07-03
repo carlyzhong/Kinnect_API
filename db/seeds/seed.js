@@ -1,6 +1,7 @@
 const db = require("../connection");
 const format = require("pg-format");
 const { convertTimestampToDate, createRef } = require("./utils");
+const bcrypt = require('bcrypt');
 
 const seed = async ({
   tagsData,
@@ -88,20 +89,27 @@ const seed = async ({
   );
   await db.query(insertFamiliesQuery);
 
+  const hashedUserData = await Promise.all(
+    userData.map(async (user) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10); // 10 is the salt rounds
+      return [
+        user.username,
+        user.firstname,
+        user.lastname,
+        user.sex,
+        user.portrait_url,
+        user.birthdate,
+        user.email,
+        hashedPassword,
+        user.bio,
+        user.timezone,
+      ];
+    }),
+  );
+
   const insertUsersQuery = format(
     `INSERT INTO users (username, firstname, lastname, sex, portrait_url, birthdate, email, password, bio, timezone) VALUES %L RETURNING *;`,
-    userData.map((user) => [
-      user.username,
-      user.firstname,
-      user.lastname,
-      user.sex,
-      user.portrait_url,
-      user.birthdate,
-      user.email,
-      user.password,
-      user.bio,
-      user.timezone,
-    ]),
+    hashedUserData,
   );
   const { rows: insertedUsers } = await db.query(insertUsersQuery);
 
