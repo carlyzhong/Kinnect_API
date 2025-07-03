@@ -11,9 +11,11 @@ const seed = async ({
   commentData,
   articlesTagsData,
   familiesUsersData,
+  reactionsData,
 }) => {
   await db.query(`DROP TABLE IF EXISTS articles_tags;`);
   await db.query(`DROP TABLE IF EXISTS families_users;`);
+  await db.query(`DROP TABLE IF EXISTS reactions;`);
   await db.query(`DROP TABLE IF EXISTS comments;`);
   await db.query(`DROP TABLE IF EXISTS articles;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
@@ -73,6 +75,13 @@ const seed = async ({
       body TEXT,
       author VARCHAR(50) REFERENCES users(username),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+  await db.query(`
+    CREATE TABLE reactions (
+      reaction_id SERIAL PRIMARY KEY,
+      emoji VARCHAR(10) NOT NULL UNIQUE
     );
   `);
 
@@ -174,6 +183,12 @@ const seed = async ({
     ]),
   );
   await db.query(insertCommentsQuery);
+
+  const insertReactionsQuery = format(
+    `INSERT INTO reactions (emoji) VALUES %L RETURNING *;`,
+    reactionsData.map((reaction) => [reaction.emoji]),
+  );
+  await db.query(insertReactionsQuery);
 
   if (familiesUsersData) {
     const insertFamiliesUsersQuery = format(

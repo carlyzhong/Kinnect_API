@@ -1,8 +1,8 @@
 const { faker } = require("@faker-js/faker");
 
-exports.dateGenerator = () => {
+exports.dateGenerator = (years = 3) => {
   const date = faker.date.past({
-    years: 5,
+    years: years,
     refDate: "2025-06-20T00:00:00.000Z",
   });
   return date;

@@ -265,6 +265,51 @@ describe("Database schema and seed data", () => {
       expect(primaryKeyColumnName).toBe("comment_id");
     });
 
+    test("reactions table exists and has correct columns and primary key", async () => {
+      const {
+        rows: [{ exists }],
+      } = await db.query(
+        `SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'reactions');`,
+      );
+      expect(exists).toBe(true);
+      const { rows: columns } = await db.query(
+        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'reactions';`,
+      );
+      expect(columns).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            column_name: "reaction_id",
+            data_type: "integer",
+            is_nullable: "NO",
+          }),
+          expect.objectContaining({
+            column_name: "emoji",
+            data_type: "character varying",
+            is_nullable: "NO",
+          }),
+        ]),
+      );
+      const { rows: primaryKeyQueryResultRows } = await db.query(
+        `SELECT column_name FROM information_schema.key_column_usage WHERE table_name = 'reactions' AND constraint_name = 'reactions_pkey';`,
+      );
+      expect(primaryKeyQueryResultRows.length).toBe(1);
+      const primaryKeyColumnName = primaryKeyQueryResultRows[0].column_name;
+      expect(primaryKeyColumnName).toBe("reaction_id");
+    });
+
+    test("reactions table has unique name constraint", async () => {
+      const { rows: uniqueRows } = await db.query(`
+        SELECT tc.constraint_type
+        FROM information_schema.table_constraints tc
+        JOIN information_schema.constraint_column_usage ccu
+          ON tc.constraint_name = ccu.constraint_name
+        WHERE tc.table_name = 'reactions'
+          AND ccu.column_name = 'emoji'
+          AND tc.constraint_type = 'UNIQUE';
+      `);
+      expect(uniqueRows.length).toBeGreaterThan(0);
+    });
+
     describe("articles_tags table", () => {
       test("exists and has correct columns, primary key, and constraints", async () => {
         const {
