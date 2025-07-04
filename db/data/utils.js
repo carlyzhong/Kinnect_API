@@ -40,7 +40,7 @@ exports.randomGenderGenerator = () => {
 // };
 
 exports.loremParagraphsGenerator = () => {
-  return faker.lorem.paragraphs({ min: 1, max: 5 });
+  return faker.lorem.paragraphs({ min: 1, max: 10 });
 };
 
 exports.loremSentencesGenerator = () => {

@@ -6,9 +6,9 @@ const bcrypt = require("bcrypt");
 const seed = async ({
   tagsData,
   usersData,
-  familyData,
-  articleData,
-  commentData,
+  familiesData,
+  articlesData,
+  commentsData,
   articlesTagsData,
   familiesUsersData,
   reactionsData,
@@ -138,7 +138,7 @@ const seed = async ({
 
   const insertFamiliesQuery = format(
     `INSERT INTO families (family_name, created_by, img_url, created_at) VALUES %L RETURNING *;`,
-    familyData.map((family) => [
+    familiesData.map((family) => [
       family.family_name,
       family.created_by,
       family.img_url,
@@ -177,9 +177,13 @@ const seed = async ({
 
   const userTimezoneRef = createRef(insertedUsers, "username", "timezone");
 
+  const convertedarticlesData = articlesData.map((article) =>
+    convertTimestampToDate(article),
+  );
+
   const insertArticlesQuery = format(
     `INSERT INTO articles (title, author_username, body, created_at, article_img_urls, family_id, is_pinned, location) VALUES %L RETURNING *;`,
-    articleData.map((article) => [
+    convertedarticlesData.map((article) => [
       article.title,
       article.author_username,
       article.body,
@@ -205,7 +209,7 @@ const seed = async ({
 
   const insertCommentsQuery = format(
     `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,
-    commentData.map((comment) => [
+    commentsData.map((comment) => [
       insertedArticles[comment.article_title],
       comment.body,
       comment.author,
