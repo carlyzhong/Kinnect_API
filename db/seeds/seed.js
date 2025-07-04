@@ -173,13 +173,7 @@ const seed = async ({
       article.tag,
     ]),
   );
-  const { rows: insertedArticles } = await db.query(insertArticlesQuery);
-
-  const articleTitleToIdRef = createRef(
-    insertedArticles,
-    "title",
-    "article_id",
-  );
+  await db.query(insertArticlesQuery);
 
   //insert comments
   const convertedCommentsData = commentsData.map((comment) =>
@@ -189,7 +183,7 @@ const seed = async ({
   const insertCommentsQuery = format(
     `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,
     convertedCommentsData.map((comment) => [
-      articleTitleToIdRef[comment.article_title],
+      comment.article_id,
       comment.body,
       comment.author,
       comment.created_at,

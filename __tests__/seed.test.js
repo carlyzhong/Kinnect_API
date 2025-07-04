@@ -528,7 +528,6 @@ describe("Database schema and seed data", () => {
     describe("families_users table", () => {
       test("data inserted", async () => {
         const { rows } = await db.query(`SELECT * FROM families_users;`);
-        console.log(rows);
         expect(rows.length).toBe(data.familiesUsersData.length);
         rows.forEach((row) => {
           expect(row).toHaveProperty("family_user_id");
