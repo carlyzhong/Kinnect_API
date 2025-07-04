@@ -1,26 +1,67 @@
-const { faker } = require("@faker-js/faker");
-const { portraitGenerator, randomGenderGenerator } = require("../utils");
-
-function createTestUser(username, firstname, lastname) {
-  const sex = randomGenderGenerator();
-  return {
-    username,
-    firstname,
-    lastname,
-    sex,
-    portrait_url: portraitGenerator(sex),
-    birthdate: faker.date.birthdate(),
-    email: faker.internet.email({ firstName: firstname, lastName: lastname }),
-    password: "qwerqwer",
-    bio: faker.person.bio(),
-    timezone: faker.location.timeZone(),
-  };
-}
-
 module.exports = [
-  createTestUser("test_user_1", "test_first_name_1", "test_last_name_1"),
-  createTestUser("test_user_2", "test_first_name_2", "test_last_name_2"),
-  createTestUser("test_user_3", "test_first_name_3", "test_last_name_3"),
-  createTestUser("test_user_4", "test_first_name_4", "test_last_name_4"),
-  createTestUser("test_user_5", "test_first_name_5", "test_last_name_5"),
+  {
+    username: "test_user_1",
+    firstname: "firstname_1",
+    lastname: "lastname_1",
+    sex: "female",
+    portrait_url:
+      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/256/18.jpg",
+    birthdate: -161946378304,
+    email: "firstname_1_lastname_139@hotmail.com",
+    password: "qwerqwer",
+    bio: "creator",
+    timezone: "Africa/Windhoek",
+  },
+  {
+    username: "test_user_2",
+    firstname: "firstname_2",
+    lastname: "lastname_2",
+    sex: "male",
+    portrait_url:
+      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/256/87.jpg",
+    birthdate: -133688812094,
+    email: "firstname_2.lastname_250@yahoo.com",
+    password: "qwerqwer",
+    bio: "geek, nerd",
+    timezone: "Asia/Qostanay",
+  },
+  {
+    username: "test_user_3",
+    firstname: "firstname_3",
+    lastname: "lastname_3",
+    sex: "female",
+    portrait_url:
+      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/256/58.jpg",
+    birthdate: 863866329825,
+    email: "firstname_3_lastname_3@gmail.com",
+    password: "qwerqwer",
+    bio: "grad, writer, developer",
+    timezone: "Pacific/Palau",
+  },
+  {
+    username: "test_user_4",
+    firstname: "firstname_4",
+    lastname: "lastname_4",
+    sex: "female",
+    portrait_url:
+      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/256/1.jpg",
+    birthdate: -418724470396,
+    email: "firstname_4.lastname_4@gmail.com",
+    password: "qwerqwer",
+    bio: "photographer, veteran, grad",
+    timezone: "America/St_Johns",
+  },
+  {
+    username: "test_user_5",
+    firstname: "firstname_5",
+    lastname: "lastname_5",
+    sex: "female",
+    portrait_url:
+      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/256/76.jpg",
+    birthdate: -159648954063,
+    email: "firstname_5_lastname_5@gmail.com",
+    password: "qwerqwer",
+    bio: "vestment fan, artist 💅🏾",
+    timezone: "Asia/Vientiane",
+  },
 ];
