@@ -577,7 +577,7 @@ describe("Database schema and seed data", () => {
     });
     test("users data inserted", async () => {
       const { rows } = await db.query(`SELECT * FROM users;`);
-      expect(rows.length).toBe(data.userData.length);
+      expect(rows.length).toBe(data.usersData.length);
       rows.forEach((row) => {
         expect(row).toHaveProperty("username");
         expect(row).toHaveProperty("firstname");

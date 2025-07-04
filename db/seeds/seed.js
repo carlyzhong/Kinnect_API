@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 
 const seed = async ({
   tagsData,
-  userData,
+  usersData,
   familyData,
   articleData,
   commentData,
@@ -147,8 +147,12 @@ const seed = async ({
   );
   await db.query(insertFamiliesQuery);
 
-  const hashedUserData = await Promise.all(
-    userData.map(async (user) => {
+  const convertedUsersData = usersData.map((user) =>
+    convertTimestampToDate(user),
+  );
+
+  const hashedUsersData = await Promise.all(
+    convertedUsersData.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10); // 10 is the salt rounds
       return [
         user.username,
@@ -167,7 +171,7 @@ const seed = async ({
 
   const insertUsersQuery = format(
     `INSERT INTO users (username, firstname, lastname, sex, portrait_url, birthdate, email, password, bio, timezone) VALUES %L RETURNING *;`,
-    hashedUserData,
+    hashedUsersData,
   );
   const { rows: insertedUsers } = await db.query(insertUsersQuery);
 
