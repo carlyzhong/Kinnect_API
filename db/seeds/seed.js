@@ -2,6 +2,7 @@ const db = require("../connection");
 const format = require("pg-format");
 const { convertTimestampToDate, createRef } = require("./utils");
 const bcrypt = require("bcrypt");
+const { dateGenerator } = require("../data/utils");
 
 const seed = async ({
   tagsData,
@@ -103,7 +104,7 @@ const seed = async ({
       family_user_id SERIAL PRIMARY KEY,
       family_id INT NOT NULL REFERENCES families(family_id) ON DELETE CASCADE,
       username VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
-      joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
       UNIQUE(family_id, username)
     );
   `);
@@ -257,12 +258,15 @@ const seed = async ({
   }
 
   if (familiesUsersData) {
+    const convertedFamiliesUsersData = familiesUsersData.map((familyUser) =>
+      convertTimestampToDate(familyUser),
+    );
     const insertFamiliesUsersQuery = format(
-      `INSERT INTO families_users (family_id, username, joined_at) VALUES %L RETURNING *;`,
-      familiesUsersData.map((familyUser) => [
+      `INSERT INTO families_users (family_id, username, created_at) VALUES %L RETURNING *;`,
+      convertedFamiliesUsersData.map((familyUser) => [
         familyUser.family_id,
         familyUser.username,
-        familyUser.joined_at,
+        familyUser.created_at,
       ]),
     );
     await db.query(insertFamiliesUsersQuery);

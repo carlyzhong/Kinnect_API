@@ -391,7 +391,7 @@ describe("Database schema and seed data", () => {
               is_nullable: "NO",
             }),
             expect.objectContaining({
-              column_name: "joined_at",
+              column_name: "created_at",
               data_type: "timestamp without time zone",
             }),
           ]),
@@ -646,7 +646,7 @@ describe("Database schema and seed data", () => {
           expect(row).toHaveProperty("family_user_id");
           expect(row).toHaveProperty("family_id");
           expect(row).toHaveProperty("username");
-          expect(row).toHaveProperty("joined_at");
+          expect(row).toHaveProperty("created_at");
         });
       });
     });
