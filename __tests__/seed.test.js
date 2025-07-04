@@ -566,7 +566,7 @@ describe("Database schema and seed data", () => {
     });
     test("families data inserted", async () => {
       const { rows } = await db.query(`SELECT * FROM families;`);
-      expect(rows.length).toBe(data.familyData.length);
+      expect(rows.length).toBe(data.familiesData.length);
       rows.forEach((row) => {
         expect(row).toHaveProperty("family_id");
         expect(row).toHaveProperty("family_name");
@@ -593,7 +593,7 @@ describe("Database schema and seed data", () => {
     });
     test("articles data inserted", async () => {
       const { rows } = await db.query(`SELECT * FROM articles;`);
-      expect(rows.length).toBe(data.articleData.length);
+      expect(rows.length).toBe(data.articlesData.length);
       rows.forEach((row) => {
         expect(row).toHaveProperty("article_id");
         expect(row).toHaveProperty("title");
@@ -608,7 +608,7 @@ describe("Database schema and seed data", () => {
     });
     test("comments data inserted", async () => {
       const { rows } = await db.query(`SELECT * FROM comments;`);
-      expect(rows.length).toBe(data.commentData.length);
+      expect(rows.length).toBe(data.commentsData.length);
       rows.forEach((row) => {
         expect(row).toHaveProperty("comment_id");
         expect(row).toHaveProperty("article_id");
