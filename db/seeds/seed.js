@@ -2,7 +2,6 @@ const db = require("../connection");
 const format = require("pg-format");
 const { convertTimestampToDate, createRef } = require("./utils");
 const bcrypt = require("bcrypt");
-const { dateGenerator } = require("../data/utils");
 
 const seed = async ({
   tagsData,
