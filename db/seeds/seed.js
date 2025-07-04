@@ -136,9 +136,13 @@ const seed = async ({
   );
   await db.query(insertTagsQuery);
 
+  const convertedFamiliesData = familiesData.map((family) =>
+    convertTimestampToDate(family),
+  );
+
   const insertFamiliesQuery = format(
     `INSERT INTO families (family_name, created_by, img_url, created_at) VALUES %L RETURNING *;`,
-    familiesData.map((family) => [
+    convertedFamiliesData.map((family) => [
       family.family_name,
       family.created_by,
       family.img_url,
