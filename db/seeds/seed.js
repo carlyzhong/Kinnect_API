@@ -4,34 +4,23 @@ const { convertTimestampToDate, createRef } = require("./utils");
 const bcrypt = require("bcrypt");
 
 const seed = async ({
-  tagsData,
   usersData,
   familiesData,
   articlesData,
   commentsData,
-  articlesTagsData,
   familiesUsersData,
   reactionsData,
   articlesReactionsData,
   commentsReactionsData,
 }) => {
-  await db.query(`DROP TABLE IF EXISTS comments_reactions;`);
-  await db.query(`DROP TABLE IF EXISTS articles_reactions;`);
-  await db.query(`DROP TABLE IF EXISTS articles_tags;`);
-  await db.query(`DROP TABLE IF EXISTS families_users;`);
-  await db.query(`DROP TABLE IF EXISTS reactions;`);
-  await db.query(`DROP TABLE IF EXISTS comments;`);
-  await db.query(`DROP TABLE IF EXISTS articles;`);
-  await db.query(`DROP TABLE IF EXISTS users;`);
-  await db.query(`DROP TABLE IF EXISTS families;`);
-  await db.query(`DROP TABLE IF EXISTS tags;`);
-
-  await db.query(`
-    CREATE TABLE tags (
-      tag_id SERIAL PRIMARY KEY,
-      tag_name VARCHAR(255) UNIQUE NOT NULL
-    );
-  `);
+  await db.query(`DROP TABLE IF EXISTS comments_reactions CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS articles_reactions CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS families_users CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS comments CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS articles CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS reactions CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS families CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS users CASCADE;`);
 
   await db.query(`
     CREATE TABLE families (
@@ -62,13 +51,14 @@ const seed = async ({
     CREATE TABLE articles (
       article_id SERIAL PRIMARY KEY,
       title VARCHAR(500) NOT NULL,
-      author_username VARCHAR(50) REFERENCES users(username),
+      author VARCHAR(50) REFERENCES users(username),
       body TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       article_img_urls VARCHAR(1000)[] NOT NULL,
       family_id INT REFERENCES families(family_id) NOT NULL,
       is_pinned BOOLEAN DEFAULT false,
-      location VARCHAR(255)
+      location VARCHAR(255),
+      tag VARCHAR(25) NOT NULL
     );
   `);
 
@@ -90,15 +80,6 @@ const seed = async ({
   `);
 
   await db.query(`
-    CREATE TABLE articles_tags (
-      article_tag_id SERIAL PRIMARY KEY,
-      article_id INT NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
-      tag_id INT NOT NULL REFERENCES tags(tag_id) ON DELETE CASCADE,
-      UNIQUE(article_id, tag_id)
-    );
-  `);
-
-  await db.query(`
     CREATE TABLE families_users ( 
       family_user_id SERIAL PRIMARY KEY,
       family_id INT NOT NULL REFERENCES families(family_id) ON DELETE CASCADE,
@@ -114,7 +95,7 @@ const seed = async ({
       article_id INT NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
       username VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
       reaction_id INT NOT NULL REFERENCES reactions(reaction_id) ON DELETE CASCADE,
-      reacted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(article_id, username, reaction_id)
     );
   `);
@@ -125,21 +106,16 @@ const seed = async ({
       comment_id INT NOT NULL REFERENCES comments(comment_id) ON DELETE CASCADE,
       username VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
       reaction_id INT NOT NULL REFERENCES reactions(reaction_id) ON DELETE CASCADE,
-      reacted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(comment_id, username, reaction_id)
     );
   `);
 
-  const insertTagsQuery = format(
-    `INSERT INTO tags (tag_name) VALUES %L RETURNING *;`,
-    tagsData.map((tag) => [tag.tag_name]),
-  );
-  await db.query(insertTagsQuery);
-
+  //insert data
+  //families
   const convertedFamiliesData = familiesData.map((family) =>
     convertTimestampToDate(family),
   );
-
   const insertFamiliesQuery = format(
     `INSERT INTO families (family_name, created_by, img_url, created_at) VALUES %L RETURNING *;`,
     convertedFamiliesData.map((family) => [
@@ -151,10 +127,10 @@ const seed = async ({
   );
   await db.query(insertFamiliesQuery);
 
+  //users
   const convertedUsersData = usersData.map((user) =>
     convertTimestampToDate(user),
   );
-
   const hashedUsersData = await Promise.all(
     convertedUsersData.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10); // 10 is the salt rounds
@@ -172,45 +148,40 @@ const seed = async ({
       ];
     }),
   );
-
   const insertUsersQuery = format(
     `INSERT INTO users (username, firstname, lastname, sex, portrait_url, birthdate, email, password, bio, timezone) VALUES %L RETURNING *;`,
     hashedUsersData,
   );
   const { rows: insertedUsers } = await db.query(insertUsersQuery);
 
+  //insert articles
   const userTimezoneRef = createRef(insertedUsers, "username", "timezone");
-
   const convertedarticlesData = articlesData.map((article) =>
     convertTimestampToDate(article),
   );
-
   const insertArticlesQuery = format(
-    `INSERT INTO articles (title, author_username, body, created_at, article_img_urls, family_id, is_pinned, location) VALUES %L RETURNING *;`,
+    `INSERT INTO articles (title, author, body, created_at, article_img_urls, family_id, is_pinned, location, tag) VALUES %L RETURNING *;`,
     convertedarticlesData.map((article) => [
       article.title,
-      article.author_username,
+      article.author,
       article.body,
       article.created_at,
       `{${article.article_img_urls.map((url) => `"${url}"`).join(",")}}`,
       article.family_id,
       article.is_pinned,
-      userTimezoneRef[article.author_username],
+      userTimezoneRef[article.author],
+      article.tag,
     ]),
   );
   const { rows: insertedArticles } = await db.query(insertArticlesQuery);
 
-  // Insert into articles_tags
-  const articlesTagsRows = articlesTagsData.map((articleTag) => [
-    articleTag.article_id,
-    articleTag.tag_id,
-  ]);
-  const insertArticlesTagsQuery = format(
-    `INSERT INTO articles_tags (article_id, tag_id) VALUES %L RETURNING *;`,
-    articlesTagsRows,
+  const articleTitleToIdRef = createRef(
+    insertedArticles,
+    "title",
+    "article_id",
   );
-  await db.query(insertArticlesTagsQuery);
 
+  //insert comments
   const convertedCommentsData = commentsData.map((comment) =>
     convertTimestampToDate(comment),
   );
@@ -218,7 +189,7 @@ const seed = async ({
   const insertCommentsQuery = format(
     `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,
     convertedCommentsData.map((comment) => [
-      insertedArticles[comment.article_title],
+      articleTitleToIdRef[comment.article_title],
       comment.body,
       comment.author,
       comment.created_at,
@@ -226,50 +197,56 @@ const seed = async ({
   );
   await db.query(insertCommentsQuery);
 
+  //insert reactions
   const insertReactionsQuery = format(
     `INSERT INTO reactions (emoji) VALUES %L RETURNING *;`,
     reactionsData.map((reaction) => [reaction.emoji]),
   );
   await db.query(insertReactionsQuery);
 
+  //insert articles_reactions
+  const convertedarticlesReationsData = articlesReactionsData.map((article) =>
+    convertTimestampToDate(article),
+  );
   const insertArticlesReactionsQuery = format(
-    `INSERT INTO articles_reactions (article_id, username, reaction_id, reacted_at) VALUES %L RETURNING *;`,
-    articlesReactionsData.map((articleReaction) => [
+    `INSERT INTO articles_reactions (article_id, username, reaction_id, created_at) VALUES %L RETURNING *;`,
+    convertedarticlesReationsData.map((articleReaction) => [
       articleReaction.article_id,
       articleReaction.username,
       articleReaction.reaction_id,
-      articleReaction.reacted_at,
+      articleReaction.created_at,
     ]),
   );
   await db.query(insertArticlesReactionsQuery);
 
-  if (commentsReactionsData) {
-    const insertCommentsReactionsQuery = format(
-      `INSERT INTO comments_reactions (comment_id, username, reaction_id, reacted_at) VALUES %L RETURNING *;`,
-      commentsReactionsData.map((commentReaction) => [
-        commentReaction.comment_id,
-        commentReaction.username,
-        commentReaction.reaction_id,
-        commentReaction.reacted_at,
-      ]),
-    );
-    await db.query(insertCommentsReactionsQuery);
-  }
+  //insert comments_reactions
+  const convertedcommentsReationsData = commentsReactionsData.map((article) =>
+    convertTimestampToDate(article),
+  );
+  const insertCommentsReactionsQuery = format(
+    `INSERT INTO comments_reactions (comment_id, username, reaction_id, created_at) VALUES %L RETURNING *;`,
+    convertedcommentsReationsData.map((commentReaction) => [
+      commentReaction.comment_id,
+      commentReaction.username,
+      commentReaction.reaction_id,
+      commentReaction.created_at,
+    ]),
+  );
+  await db.query(insertCommentsReactionsQuery);
 
-  if (familiesUsersData) {
-    const convertedFamiliesUsersData = familiesUsersData.map((familyUser) =>
-      convertTimestampToDate(familyUser),
-    );
-    const insertFamiliesUsersQuery = format(
-      `INSERT INTO families_users (family_id, username, created_at) VALUES %L RETURNING *;`,
-      convertedFamiliesUsersData.map((familyUser) => [
-        familyUser.family_id,
-        familyUser.username,
-        familyUser.created_at,
-      ]),
-    );
-    await db.query(insertFamiliesUsersQuery);
-  }
+  //insert families_users
+  const convertedFamiliesUsersData = familiesUsersData.map((familyUser) =>
+    convertTimestampToDate(familyUser),
+  );
+  const insertFamiliesUsersQuery = format(
+    `INSERT INTO families_users (family_id, username, created_at) VALUES %L RETURNING *;`,
+    convertedFamiliesUsersData.map((familyUser) => [
+      familyUser.family_id,
+      familyUser.username,
+      familyUser.created_at,
+    ]),
+  );
+  await db.query(insertFamiliesUsersQuery);
 
   console.log("🪴Seeding is completed.");
 };

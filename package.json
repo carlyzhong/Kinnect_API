@@ -13,7 +13,8 @@
     "seed-prod": "NODE_ENV=production npm run seed-dev",
     "test": "jest --runInBand",
     "format": "prettier --write .",
-    "check-format": "prettier --check ."
+    "check-format": "prettier --check .",
+    "faker": "node db/data/data-generator/faker.js"
   },
   "repository": {
     "type": "git",
