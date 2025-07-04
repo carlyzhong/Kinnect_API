@@ -211,9 +211,13 @@ const seed = async ({
   );
   await db.query(insertArticlesTagsQuery);
 
+  const convertedCommentsData = commentsData.map((comment) =>
+    convertTimestampToDate(comment),
+  );
+
   const insertCommentsQuery = format(
     `INSERT INTO comments (article_id, body, author, created_at) VALUES %L`,
-    commentsData.map((comment) => [
+    convertedCommentsData.map((comment) => [
       insertedArticles[comment.article_title],
       comment.body,
       comment.author,

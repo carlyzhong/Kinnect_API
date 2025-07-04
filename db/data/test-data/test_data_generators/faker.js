@@ -5,6 +5,7 @@ const {
   loremParagraphsGenerator,
   dateGenerator,
   imgUrlsGenerator,
+  loremSentencesGenerator,
 } = require("../../utils");
 
 function generateTestUsers(num) {
@@ -90,6 +91,34 @@ function generateTestFamilies(num) {
   return families;
 }
 
-const families = generateTestFamilies(3);
-// node ./db/data/test-data/test_data_generators/faker.js > db/data/test-data/families.js
-console.log(families);
+// const families = generateTestFamilies(3);
+// // node ./db/data/test-data/test_data_generators/faker.js > db/data/test-data/families.js
+// console.log(families);
+
+function generateTestComments(num) {
+  let comments = [];
+  for (let i = 1; i <= num; i++) {
+    const body = `This is a testing comment: ${loremSentencesGenerator()}`;
+    const author = faker.helpers.arrayElement([
+      "test_user_1",
+      "test_user_2",
+      "test_user_3",
+      "test_user_4",
+      "test_user_5",
+    ]);
+    const article_id = faker.number.int({ max: 20 });
+    const created_at = dateGenerator().getTime();
+    const comment = {
+      body,
+      author,
+      article_id,
+      created_at,
+    };
+    comments.push(comment);
+  }
+  return comments;
+}
+
+// const comments = generateTestComments(50);
+// // node ./db/data/test-data/test_data_generators/faker.js > db/data/test-data/comments.js
+// console.log(comments);
