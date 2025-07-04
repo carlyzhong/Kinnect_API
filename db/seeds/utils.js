@@ -1,8 +1,22 @@
 const db = require("../../db/connection");
 
-exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
-  if (!created_at) return { ...otherProperties };
-  return { created_at: new Date(created_at), ...otherProperties };
+exports.convertTimestampToDate = ({
+  created_at,
+  birthdate,
+  ...otherProperties
+}) => {
+  if (created_at && !birthdate) {
+    return { created_at: new Date(created_at), ...otherProperties };
+  } else if (birthdate && !created_at) {
+    return { birthdate: new Date(birthdate), ...otherProperties };
+  } else if (birthdate && created_at) {
+    return {
+      created_at: new Date(created_at),
+      birthdate: new Date(birthdate),
+      ...otherProperties,
+    };
+  }
+  return { ...otherProperties };
 };
 
 exports.createRef = (data, key, value) => {
