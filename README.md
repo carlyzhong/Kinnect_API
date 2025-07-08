@@ -12,7 +12,7 @@ I know this feeling well. Even though we can use video calls to chat with family
 
 Plenty of people don't use social media like Instagram or Facebook, so I created Kinnect. It's a platform just for families to share news, thoughts, and updates. It's a private space where your posts stay within your family, free from judgment, offering love and support from your closest family and friends, no matter how far apart you are.
 
-This repo is a RESTful API that Kinnect.
+This repo is a RESTful API that powers Kinnect.
 
 ## Table of Contents
 
