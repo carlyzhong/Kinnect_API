@@ -2,7 +2,7 @@
 
 <!-- ## Hosted Version -->
 
-<!-- [Posted - Live Demo](https://kinnect-with.netlify.app) -->
+<!-- [Kinnect - Live Demo](https://kinnect-with.netlify.app) -->
 
 ## Project Summary
 
