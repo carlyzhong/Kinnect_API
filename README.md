@@ -1,4 +1,4 @@
-# Kinnect - API
+# Kinnect - API (ONGOING PROJECT)
 
 <!-- ## Hosted Version -->
 
